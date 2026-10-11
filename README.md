@@ -132,7 +132,40 @@ Al primo avvio il container installa PHPMailer automaticamente
 Se non hai configurato l'SMTP, l'endpoint risponde con un messaggio chiaro e logga il
 messaggio invece di inviarlo.
 
-### Deploy su Plesk
+### Deploy automatico (GitHub Actions)
+
+Il repository è su GitHub e `.github/workflows/deploy.yml` pubblica il sito a ogni push su `main`:
+compila in CI (`npm ci && npm run build`) e carica `dist/` nella document root di Plesk via **rsync
+su SSH**, trasferendo **solo i file cambiati**.
+
+**Segreti da impostare** — GitHub → Settings → Secrets and variables → Actions:
+
+| Segreto | Esempio | Note |
+|---|---|---|
+| `REMOTE_HOST` | `123.45.67.89` | host SSH del server Plesk |
+| `REMOTE_USER` | `sito` | utente SSH di Plesk |
+| `REMOTE_PORT` | `22` | porta SSH |
+| `REMOTE_PATH` | `/var/www/vhosts/3manstour.com/httpdocs/` | **con lo slash finale** |
+| `REMOTE_SSH_KEY` | `-----BEGIN OPENSSH PRIVATE KEY-----…` | chiave privata SSH |
+
+**Preparazione lato Plesk**
+
+1. Abilita l'accesso **SSH/SFTP** per l'utente del dominio (Plesk → dominio → Accesso SSH).
+2. Genera una coppia di chiavi in locale (`ssh-keygen -t ed25519 -C deploy`) e aggiungi la
+   **chiave pubblica** tra quelle autorizzate dell'utente (`~/.ssh/authorized_keys`).
+3. Incolla la **chiave privata** nel segreto `REMOTE_SSH_KEY`.
+4. Fai un push su `main` e controlla il risultato in GitHub → **Actions**.
+
+**Attenzione**
+
+- `api/vendor/` è **escluso** dal deploy (il form contatti usa PHPMailer via Composer). Se serve,
+  installalo sul server con `composer install --working-dir=api`.
+- Il flag `--delete` rimuove dalla document root i file non presenti in `dist/` (tranne gli
+  esclusi). Se hai file gestiti a mano sul server, aggiungi un `--exclude` o togli `--delete`.
+- Alternativa **senza SSH**: un'azione FTPS (es. `SamKirkland/FTP-Deploy-Action`) carica solo i file
+  cambiati usando le credenziali FTP di Plesk.
+
+### Deploy manuale (alternativa)
 
 1. `npm run build`
 2. Carica il **contenuto di `dist/`** nella document root del dominio.
