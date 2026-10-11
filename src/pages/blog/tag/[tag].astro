@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Hero from '../../../components/Hero.astro';
+import BlogCard from '../../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+import { slugify } from '../../../lib/utils';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const tagMap = new Map<string, typeof posts>();
+  for (const post of posts) {
+    for (const tag of post.data.tags ?? []) {
+      if (!tagMap.has(tag)) tagMap.set(tag, []);
+      tagMap.get(tag)!.push(post);
+    }
+  }
+
+  return [...tagMap.entries()].map(([tag, tagPosts]) => ({
+    params: { tag: slugify(tag) },
+    props: {
+      tag,
+      posts: tagPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout
+  title={`Articoli con tag #${tag}`}
+  description={`Tutti gli articoli di 3 Man's Tour contrassegnati con il tag #${tag}.`}
+>
+  <Hero
+    eyebrow="Archivio tag"
+    title={`#${tag}`}
+    subtitle={`${posts.length} ${posts.length === 1 ? 'articolo' : 'articoli'} con questo tag.`}
+  >
+    <a href="/blog/" class="mt-6 inline-block text-sm font-medium text-brand-300 hover:text-white">
+      ← Torna a tutti gli articoli
+    </a>
+  </Hero>
+
+  <section class="container-page py-12 sm:py-16">
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post) => <BlogCard post={post} />)}
+    </div>
+  </section>
+</BaseLayout>

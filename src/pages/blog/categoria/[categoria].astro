@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Hero from '../../../components/Hero.astro';
+import BlogCard from '../../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../../../config';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return CATEGORIES.map((cat) => {
+    const catPosts = posts
+      .filter((p) => p.data.category === cat.slug)
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+    return { params: { categoria: cat.slug }, props: { category: cat, posts: catPosts } };
+  });
+}
+
+const { category, posts } = Astro.props;
+---
+
+<BaseLayout title={category.label} description={category.description}>
+  <Hero eyebrow="Categoria" title={category.label} subtitle={category.description}>
+    <a href="/blog/" class="mt-6 inline-block text-sm font-medium text-brand-300 transition hover:text-white">
+      ← Torna a tutti gli articoli
+    </a>
+  </Hero>
+
+  <section class="container-page py-12 sm:py-16">
+    {
+      posts.length > 0 ? (
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <BlogCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="text-neutral-500">Nessun articolo in questa categoria, per ora.</p>
+      )
+    }
+  </section>
+</BaseLayout>

@@ -1,0 +1,133 @@
+---
+import { SITE } from '../config';
+
+/**
+ * Banner cookie + caricamento di Google Analytics 4.
+ *
+ * GA4 viene caricato SOLO dopo il consenso (basic mode): nessuna richiesta a
+ * Google prima dell'accettazione. La scelta è salvata in localStorage.
+ * Il banner è attivo solo se `SITE.gaMeasurementId` è impostato.
+ */
+const gaId = SITE.gaMeasurementId;
+---
+
+{
+  gaId && (
+    <div
+      id="consent-banner"
+      data-ga-id={gaId}
+      role="dialog"
+      aria-live="polite"
+      aria-label="Preferenze cookie"
+      class="fixed inset-x-0 bottom-0 z-50 hidden p-4 sm:p-6"
+    >
+      <div class="container-page">
+        <div class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-night-800/95 p-5 shadow-2xl backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-sm leading-relaxed text-neutral-300">
+            Usiamo cookie tecnici per il funzionamento del sito e, con il tuo consenso, cookie di
+            analisi (Google Analytics) per capire come viene usato. Puoi accettare o rifiutare: il
+            sito funziona in entrambi i casi.{' '}
+            <a href="/cookie-policy/" class="text-brand-400 underline hover:text-brand-300">
+              Cookie Policy
+            </a>
+          </p>
+          <div class="flex shrink-0 gap-2">
+            <button
+              id="consent-reject"
+              type="button"
+              class="rounded-lg border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              Rifiuta
+            </button>
+            <button
+              id="consent-accept"
+              type="button"
+              class="rounded-lg bg-brand-500 px-4 py-2 text-sm font-semibold text-night-950 transition hover:bg-brand-400"
+            >
+              Accetta
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  const STORAGE_KEY = 'cookie-consent';
+
+  function loadGA(gaId: string) {
+    if (!gaId || (window as any).__ga4Loaded) return;
+    (window as any).__ga4Loaded = true;
+
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+    document.head.appendChild(s);
+
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    function gtag(...args: unknown[]) {
+      (window as any).dataLayer.push(args);
+    }
+    (window as any).gtag = gtag;
+
+    gtag('js', new Date());
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'granted',
+    });
+    gtag('config', gaId, { anonymize_ip: true });
+  }
+
+  function readConsent(): { analytics?: boolean } | null {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    } catch {
+      return null;
+    }
+  }
+
+  function saveConsent(analytics: boolean) {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ analytics, date: new Date().toISOString() }),
+      );
+    } catch {
+      /* localStorage non disponibile */
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const banner = document.getElementById('consent-banner');
+    const gaId = banner?.getAttribute('data-ga-id') ?? '';
+
+    if (gaId && banner) {
+      const stored = readConsent();
+      if (stored?.analytics) {
+        loadGA(gaId);
+      } else if (!stored) {
+        banner.classList.remove('hidden');
+      }
+
+      document.getElementById('consent-accept')?.addEventListener('click', () => {
+        saveConsent(true);
+        loadGA(gaId);
+        banner.classList.add('hidden');
+      });
+
+      document.getElementById('consent-reject')?.addEventListener('click', () => {
+        saveConsent(false);
+        banner.classList.add('hidden');
+      });
+    }
+
+    // Riapre il banner dal link "Preferenze cookie" in footer
+    document.getElementById('consent-reopen')?.addEventListener('click', (event) => {
+      event.preventDefault();
+      banner?.classList.remove('hidden');
+    });
+  });
+</script>

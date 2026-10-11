@@ -1,0 +1,51 @@
+---
+interface Props {
+  currentPage: number;
+  lastPage: number;
+  basePath?: string;
+}
+
+const { currentPage, lastPage, basePath = '/blog' } = Astro.props;
+
+const urlFor = (page: number) => (page === 1 ? `${basePath}/` : `${basePath}/${page}/`);
+const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
+const linkBase =
+  'inline-flex h-10 min-w-10 items-center justify-center rounded-lg border px-3 text-sm font-medium transition';
+---
+
+{
+  lastPage > 1 && (
+    <nav class="mt-12 flex flex-wrap items-center justify-center gap-2" aria-label="Paginazione">
+      {currentPage > 1 ? (
+        <a href={urlFor(currentPage - 1)} class:list={[linkBase, 'border-white/10 text-neutral-300 hover:bg-white/5']}>
+          Precedente
+        </a>
+      ) : (
+        <span class:list={[linkBase, 'border-white/5 text-neutral-600']}>Precedente</span>
+      )}
+
+      {pages.map((page) => (
+        <a
+          href={urlFor(page)}
+          class:list={[
+            linkBase,
+            page === currentPage
+              ? 'border-brand-500 bg-brand-500 text-night-950'
+              : 'border-white/10 text-neutral-300 hover:bg-white/5',
+          ]}
+          aria-current={page === currentPage ? 'page' : undefined}
+        >
+          {page}
+        </a>
+      ))}
+
+      {currentPage < lastPage ? (
+        <a href={urlFor(currentPage + 1)} class:list={[linkBase, 'border-white/10 text-neutral-300 hover:bg-white/5']}>
+          Successivo
+        </a>
+      ) : (
+        <span class:list={[linkBase, 'border-white/5 text-neutral-600']}>Successivo</span>
+      )}
+    </nav>
+  )
+}

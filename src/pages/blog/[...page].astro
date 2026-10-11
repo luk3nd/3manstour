@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import TagFilter from '../../components/TagFilter.astro';
+import Pagination from '../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+import { uniqueTags } from '../../lib/utils';
+import type { Page } from 'astro';
+
+export async function getStaticPaths({ paginate }: { paginate: any }) {
+  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+  return paginate(posts, { pageSize: 9 });
+}
+
+const { page } = Astro.props as { page: Page };
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const tags = uniqueTags(allPosts);
+---
+
+<BaseLayout
+  title="Esplora"
+  description="Il diario di 3 Man's Tour: fiere, locali, ristoranti, luoghi ed esperienze raccontati dal nostro team."
+>
+  <Hero
+    eyebrow="Esplora"
+    title="Il diario"
+    subtitle="Fiere, locali, ristoranti, luoghi ed esperienze. Filtra per argomento o sfoglia l'archivio."
+  />
+
+  <section class="container-page py-12 sm:py-16">
+    <div class="mb-8">
+      <TagFilter tags={tags} />
+    </div>
+
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {page.data.map((post) => <BlogCard post={post} />)}
+    </div>
+
+    <Pagination currentPage={page.currentPage} lastPage={page.lastPage} basePath="/blog" />
+  </section>
+</BaseLayout>

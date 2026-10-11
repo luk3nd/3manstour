@@ -1,0 +1,33 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  eyebrow?: string;
+  description?: string;
+  cover?: ImageMetadata;
+  coverAlt?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { title, subtitle, eyebrow, description, cover, coverAlt, jsonLd } = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description ?? subtitle ?? title}
+  image={cover}
+  imageAlt={coverAlt}
+  jsonLd={jsonLd}
+>
+  <Hero title={title} subtitle={subtitle} eyebrow={eyebrow} image={cover} imageAlt={coverAlt} />
+
+  <div class="container-narrow py-14 sm:py-20">
+    <article class="prose">
+      <slot />
+    </article>
+  </div>
+</BaseLayout>

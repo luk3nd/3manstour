@@ -1,0 +1,30 @@
+# Ambiente PHP locale (via OrbStack / Docker) per testare il modulo contatti.
+#
+# Flusso:
+#   1) npm run build         -> genera dist/ con anche dist/api/contact.php
+#   2) docker compose up     -> serve dist/ con Apache + PHP su http://localhost:8080
+#   3) apri http://localhost:8080/contatti/
+#
+# Le variabili SMTP vengono lette dal file .env nella root del progetto
+# (copia .env.example in .env e compila i valori reali).
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: openchamber-php
+    ports:
+      - "8080:80"
+    volumes:
+      - ./dist:/var/www/html
+    environment:
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_SECURE: ${SMTP_SECURE:-tls}
+      MAIL_FROM: ${MAIL_FROM:-}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Sito web}
+      CONTACT_TO: ${CONTACT_TO:-}
+    restart: unless-stopped

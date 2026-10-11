@@ -1,0 +1,80 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import BlogCard from '../components/BlogCard.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { SITE } from '../config';
+
+interface Props {
+  author: CollectionEntry<'authors'>;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { author, posts } = Astro.props;
+const { name, role, bio, avatar, socials } = author.data;
+
+const siteUrl = Astro.site ?? new URL(SITE.url);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name,
+    description: bio,
+    image: new URL(avatar.src, siteUrl).href,
+    url: new URL(Astro.url.pathname, siteUrl).href,
+  },
+};
+
+const socialItems = Object.entries(socials ?? {})
+  .filter(([, href]) => Boolean(href))
+  .map(([key, href]) => ({ label: key.charAt(0).toUpperCase() + key.slice(1), href: href as string }));
+---
+
+<BaseLayout
+  type="profile"
+  title={`${name} — ${role}`}
+  description={bio}
+  image={avatar}
+  imageAlt={name}
+  jsonLd={jsonLd}
+>
+  <section class="border-b border-white/10 bg-night-900">
+    <div class="container-page flex flex-col items-center gap-6 py-16 text-center sm:flex-row sm:items-center sm:text-left">
+      <Image
+        src={avatar}
+        alt={name}
+        width={144}
+        height={144}
+        format="webp"
+        class="h-36 w-36 shrink-0 rounded-full object-cover ring-2 ring-brand-500/30"
+      />
+      <div>
+        <p class="eyebrow">Autore</p>
+        <h1 class="mt-2 text-3xl font-semibold text-white sm:text-4xl">{name}</h1>
+        <p class="mt-1 font-mono text-sm uppercase tracking-wider text-brand-400">{role}</p>
+        <p class="mt-4 max-w-2xl text-neutral-400">{bio}</p>
+        <SocialLinks items={socialItems} class="mt-5 justify-center text-neutral-500 sm:justify-start" />
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-14">
+    <div class="flex items-end justify-between gap-4">
+      <h2 class="text-2xl font-semibold text-white">Articoli di {name}</h2>
+      <span class="font-mono text-sm text-neutral-500">{posts.length} {posts.length === 1 ? 'articolo' : 'articoli'}</span>
+    </div>
+    {
+      posts.length > 0 ? (
+        <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <BlogCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-6 text-neutral-500">Nessun articolo pubblicato ancora.</p>
+      )
+    }
+  </section>
+</BaseLayout>

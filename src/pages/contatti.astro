@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { CONTACT, SITE } from '../config';
+
+const items = [
+  { label: 'Email', value: CONTACT.email, href: `mailto:${CONTACT.email}` },
+  { label: 'Telefono', value: CONTACT.phone, href: `tel:${CONTACT.phone}` },
+  { label: 'Indirizzo', value: CONTACT.address, href: '' },
+  { label: 'Dove siamo', value: CONTACT.location, href: '' },
+].filter((item) => item.value);
+---
+
+<BaseLayout
+  title="Contatti"
+  description={`Contatta ${SITE.name}: segnala un luogo, proponi una collaborazione o scrivici.`}
+>
+  <Hero
+    eyebrow="Contatti"
+    title="Parliamone"
+    subtitle="Segnala un luogo poco conosciuto, proponi una collaborazione o fai una domanda. Ti risponderemo al più presto."
+  />
+
+  <section class="container-page grid gap-12 py-12 sm:py-16 lg:grid-cols-[1.4fr_1fr]">
+    <div>
+      <ContactForm />
+    </div>
+
+    <aside class="rounded-2xl border border-white/10 bg-night-900 p-8">
+      <h2 class="text-lg font-semibold text-white">Altre vie</h2>
+      <p class="mt-2 text-sm text-neutral-400">
+        Preferisci scriverci direttamente? Trovi qui i nostri recapiti.
+      </p>
+      <ul class="mt-6 space-y-4">
+        {
+          items.map((item) => (
+            <li>
+              <p class="eyebrow">{item.label}</p>
+              {item.href ? (
+                <a href={item.href} class="mt-1 block text-sm font-medium text-brand-400 hover:text-brand-300">
+                  {item.value}
+                </a>
+              ) : (
+                <p class="mt-1 text-sm text-neutral-300">{item.value}</p>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </aside>
+  </section>
+</BaseLayout>

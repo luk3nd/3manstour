@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import AuthorCard from '../../components/AuthorCard.astro';
+import { getCollection } from 'astro:content';
+
+const authors = await getCollection('authors');
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const countFor = (id: string) => posts.filter((p) => p.data.author.id === id).length;
+---
+
+<BaseLayout
+  title="Autori"
+  description="Il team di 3 Man's Tour: le persone che esplorano, riprendono e scrivono."
+>
+  <Hero
+    eyebrow="Chi esplora"
+    title="Gli autori"
+    subtitle="Le persone che esplorano, riprendono e raccontano. Clicca su un profilo per la biografia e tutti i suoi articoli."
+  />
+
+  <section class="container-page py-12 sm:py-16">
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {authors.map((author) => <AuthorCard author={author} count={countFor(author.id)} />)}
+    </div>
+  </section>
+</BaseLayout>

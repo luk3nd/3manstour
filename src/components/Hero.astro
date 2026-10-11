@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  eyebrow?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  align?: 'center' | 'left';
+  minHeight?: string;
+}
+
+const {
+  title,
+  subtitle,
+  eyebrow,
+  image,
+  imageAlt = '',
+  align = 'center',
+  minHeight = 'py-24 sm:py-32',
+} = Astro.props;
+
+const alignment = align === 'center' ? 'items-center text-center' : 'items-start text-left';
+---
+
+<section class="relative overflow-hidden bg-night-950">
+  {
+    image && (
+      <div class="absolute inset-0">
+        <Image
+          src={image}
+          alt={imageAlt}
+          widths={[640, 960, 1280, 1920]}
+          sizes="100vw"
+          format="webp"
+          quality={70}
+          class="h-full w-full object-cover opacity-35"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-night-950 via-night-950/75 to-night-950/55" />
+      </div>
+    )
+  }
+
+  <div class:list={['container-page relative flex flex-col', minHeight, alignment]}>
+    <div class:list={['max-w-3xl', align === 'center' && 'mx-auto']}>
+      {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
+      <h1 class="font-display text-4xl font-semibold leading-tight text-white sm:text-5xl">{title}</h1>
+      {subtitle && <p class="mt-5 text-lg leading-relaxed text-neutral-300 sm:text-xl">{subtitle}</p>}
+      <slot />
+    </div>
+  </div>
+</section>

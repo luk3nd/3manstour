@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import { NAV, SITE, CONTACT, SOCIAL, CATEGORIES } from '../config';
+import logo from '../assets/logo.png';
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-white/10 bg-night-950">
+  <div class="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="sm:col-span-2 lg:col-span-1">
+      <a href="/" class="flex items-center gap-2.5 font-display font-bold text-white">
+        <Image src={logo} alt={SITE.name} height={36} class="h-9 w-auto" />
+        <span class="text-lg">{SITE.name}</span>
+      </a>
+      <p class="mt-4 max-w-xs text-sm leading-relaxed text-neutral-500">{SITE.tagline}</p>
+    </div>
+
+    <div>
+      <h2 class="eyebrow">Esplora</h2>
+      <ul class="mt-4 space-y-2.5 text-sm">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} class="text-neutral-400 transition hover:text-brand-400">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="eyebrow">Categorie</h2>
+      <ul class="mt-4 space-y-2.5 text-sm">
+        {
+          CATEGORIES.map((c) => (
+            <li>
+              <a href={`/blog/categoria/${c.slug}/`} class="text-neutral-400 transition hover:text-brand-400">
+                {c.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="eyebrow">Contatti</h2>
+      <ul class="mt-4 space-y-2.5 text-sm text-neutral-400">
+        <li><a href={`mailto:${CONTACT.email}`} class="transition hover:text-brand-400">{CONTACT.email}</a></li>
+        {CONTACT.phone && <li>{CONTACT.phone}</li>}
+        {CONTACT.address && <li>{CONTACT.address}</li>}
+        {CONTACT.location && <li>{CONTACT.location}</li>}
+      </ul>
+      {SOCIAL.length > 0 && (
+        <ul class="mt-4 flex gap-4 text-sm">
+          {SOCIAL.map((s) => (
+            <li>
+              <a href={s.href} class="text-neutral-400 transition hover:text-brand-400" rel="noopener" target="_blank">
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-page flex flex-col items-center justify-between gap-3 py-6 text-sm text-neutral-500 sm:flex-row">
+      <p>© {year} {SITE.name}. Tutti i diritti riservati.</p>
+      <ul class="flex items-center gap-5">
+        <li><a href="/privacy-policy/" class="transition hover:text-brand-400">Privacy</a></li>
+        <li><a href="/cookie-policy/" class="transition hover:text-brand-400">Cookie</a></li>
+        {SITE.gaMeasurementId && (
+          <li>
+            <button id="consent-reopen" type="button" class="transition hover:text-brand-400">
+              Preferenze cookie
+            </button>
+          </li>
+        )}
+        <li><a href="/rss.xml" class="transition hover:text-brand-400">RSS</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

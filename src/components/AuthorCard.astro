@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { excerpt } from '../lib/utils';
+
+interface Props {
+  author: CollectionEntry<'authors'>;
+  count?: number;
+}
+
+const { author, count } = Astro.props;
+const { name, role, bio, avatar, shortBio } = author.data;
+---
+
+<a
+  href={`/autori/${author.id}/`}
+  class="group flex flex-col items-center rounded-2xl border border-white/10 bg-night-900 p-8 text-center transition hover:-translate-y-1 hover:border-brand-500/50"
+>
+  <Image
+    src={avatar}
+    alt={name}
+    width={112}
+    height={112}
+    format="webp"
+    class="h-28 w-28 rounded-full object-cover ring-2 ring-brand-500/30"
+  />
+  <h3 class="mt-5 text-lg font-semibold text-white transition group-hover:text-brand-400">{name}</h3>
+  <p class="mt-1 font-mono text-xs uppercase tracking-wider text-brand-400">{role}</p>
+  <p class="mt-3 text-sm leading-relaxed text-neutral-400">{excerpt(shortBio ?? bio, 130)}</p>
+  {typeof count === 'number' && (
+    <p class="mt-4 font-mono text-xs uppercase tracking-wide text-neutral-500">
+      {count} {count === 1 ? 'articolo' : 'articoli'}
+    </p>
+  )}
+</a>

@@ -1,0 +1,301 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design system — arancione su scuro, monocromatico ad alto contrasto
+   Font: Space Grotesk (display) + Inter (corpo) + mono (dettagli)
+   ========================================================================== */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Arancione brand */
+  --color-brand-50: #fff4ec;
+  --color-brand-100: #ffe6d5;
+  --color-brand-200: #ffc9a8;
+  --color-brand-300: #ffa06e;
+  --color-brand-400: #ff8c42;
+  --color-brand-500: #ff6a00;
+  --color-brand-600: #f55d00;
+  --color-brand-700: #c94a00;
+  --color-brand-800: #9c3a00;
+  --color-brand-900: #7a2e00;
+
+  /* Neri / superfici */
+  --color-night-950: #080808;
+  --color-night-900: #0d0d0d;
+  --color-night-800: #141414;
+  --color-night-700: #1c1c1c;
+
+  --radius-xl2: 1.25rem;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: #a3a3a3; /* neutral-400 */
+    background-color: #080808;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    color: #fafafa;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  ::selection {
+    background: var(--color-brand-500);
+    color: #080808;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Scrollbar (webkit) in tema scuro */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2a2a2a;
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
+  }
+}
+
+/* ==========================================================================
+   Utility di layout
+   ========================================================================== */
+.container-page {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.container-narrow {
+  width: 100%;
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+/* Etichetta "eyebrow" mono, ricorrente */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-brand-400);
+}
+
+/* ==========================================================================
+   Animazioni di ingresso (GSAP)
+   Gli elementi [data-animate] restano visibili senza JS: la classe .js su <html>
+   viene rimossa in automatico se le animazioni non partono.
+   ========================================================================== */
+html.js [data-animate] {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-animate] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ==========================================================================
+   Prose — stile del contenuto (tema scuro)
+   ========================================================================== */
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: #a3a3a3;
+}
+
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2 {
+  margin-top: 2.25em;
+  margin-bottom: 0.6em;
+  font-size: 1.6rem;
+}
+
+.prose h3 {
+  margin-top: 1.8em;
+  margin-bottom: 0.5em;
+  font-size: 1.3rem;
+}
+
+.prose h4 {
+  margin-top: 1.5em;
+  margin-bottom: 0.4em;
+  font-size: 1.1rem;
+}
+
+.prose a {
+  color: var(--color-brand-400);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.prose a:hover {
+  color: var(--color-brand-300);
+}
+
+.prose strong {
+  color: #fafafa;
+  font-weight: 600;
+}
+
+.prose em {
+  color: #d4d4d4;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4rem;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li {
+  margin-top: 0.4em;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--color-brand-500);
+  padding-left: 1.1rem;
+  color: #d4d4d4;
+  font-style: italic;
+}
+
+.prose code {
+  background: #1c1c1c;
+  padding: 0.15em 0.4em;
+  border-radius: 0.35rem;
+  font-size: 0.9em;
+  color: #ffa06e;
+  font-family: var(--font-mono);
+}
+
+.prose pre {
+  background: #141414;
+  border: 1px solid #262626;
+  color: #e5e5e5;
+  padding: 1.1rem 1.25rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.prose img {
+  border-radius: 0.9rem;
+  border: 1px solid #262626;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid #262626;
+  margin-block: 2.5em;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid #262626;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.prose th {
+  background: #141414;
+  color: #fafafa;
+}
+
+/* ==========================================================================
+   Tag filter chips (pagina blog)
+   ========================================================================== */
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid #262626;
+  background: #141414;
+  padding: 0.375rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #a3a3a3;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tag-chip:hover {
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-300);
+}
+
+.tag-chip.is-active {
+  background: var(--color-brand-500);
+  border-color: var(--color-brand-500);
+  color: #080808;
+}

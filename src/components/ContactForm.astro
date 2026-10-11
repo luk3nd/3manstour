@@ -1,0 +1,106 @@
+---
+interface Props {
+  endpoint?: string;
+}
+
+const { endpoint = '/api/contact.php' } = Astro.props;
+
+const inputClass =
+  'mt-1.5 w-full rounded-lg border border-white/10 bg-night-900 px-3.5 py-2.5 text-sm text-white shadow-sm transition placeholder:text-neutral-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none';
+const labelClass = 'block text-sm font-medium text-neutral-200';
+---
+
+<form id="contact-form" class="space-y-5" data-endpoint={endpoint} novalidate>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label class={labelClass} for="cf-name">Nome e cognome *</label>
+      <input id="cf-name" name="name" type="text" required autocomplete="name" class={inputClass} placeholder="Mario Rossi" />
+    </div>
+    <div>
+      <label class={labelClass} for="cf-email">Email *</label>
+      <input id="cf-email" name="email" type="email" required autocomplete="email" class={inputClass} placeholder="mario@esempio.it" />
+    </div>
+  </div>
+
+  <div>
+    <label class={labelClass} for="cf-subject">Oggetto *</label>
+    <input id="cf-subject" name="subject" type="text" required class={inputClass} placeholder="Come possiamo aiutarti?" />
+  </div>
+
+  <div>
+    <label class={labelClass} for="cf-message">Messaggio *</label>
+    <textarea id="cf-message" name="message" required rows="6" class={inputClass} placeholder="Scrivici il tuo messaggio…"></textarea>
+  </div>
+
+  <!-- Honeypot antispam: campo nascosto, deve restare vuoto -->
+  <div class="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+    <label for="cf-company">Non compilare questo campo</label>
+    <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="flex items-start gap-2.5">
+    <input id="cf-privacy" name="privacy" type="checkbox" required class="mt-1 h-4 w-4 rounded border-white/20 bg-night-900 text-brand-500 focus:ring-brand-500" />
+    <label for="cf-privacy" class="text-sm text-neutral-400">
+      Ho letto e accetto la <a href="/privacy-policy/" class="font-medium text-brand-400 underline">privacy policy</a>. *
+    </label>
+  </div>
+
+  <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+    <button
+      type="submit"
+      class="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-500 px-6 py-3 text-sm font-semibold text-night-950 transition hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-60"
+      data-submit
+    >
+      Invia messaggio
+    </button>
+    <p data-status role="status" aria-live="polite" class="text-sm"></p>
+  </div>
+</form>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]');
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]');
+    const endpoint = form.dataset.endpoint ?? '/api/contact.php';
+
+    const setStatus = (message: string, type: 'ok' | 'error') => {
+      if (!status) return;
+      status.textContent = message;
+      status.className =
+        'text-sm font-medium ' + (type === 'ok' ? 'text-green-500' : 'text-red-400');
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!form.reportValidity()) return;
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      submit && (submit.disabled = true);
+      setStatus('Invio in corso…', 'ok');
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (response.ok && result.ok) {
+          form.reset();
+          setStatus('Grazie! Il tuo messaggio è stato inviato. Ti risponderemo al più presto.', 'ok');
+        } else {
+          setStatus(result.error ?? 'Invio non riuscito. Riprova più tardi.', 'error');
+        }
+      } catch {
+        setStatus('Errore di rete. Controlla la connessione e riprova.', 'error');
+      } finally {
+        submit && (submit.disabled = false);
+      }
+    });
+  }
+</script>

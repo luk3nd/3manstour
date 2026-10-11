@@ -1,0 +1,88 @@
+---
+import { Image } from 'astro:assets';
+import { NAV, SITE } from '../config';
+import logo from '../assets/logo.png';
+
+const current = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? current === '/' : current.startsWith(href);
+---
+
+<header class="sticky top-0 z-40 border-b border-white/10 bg-night-950/80 backdrop-blur">
+  <div class="container-page flex h-16 items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2.5 font-display font-bold text-white">
+      <Image src={logo} alt={SITE.name} height={36} class="h-9 w-auto" />
+      <span class="text-lg tracking-tight">{SITE.name}</span>
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Navigazione principale">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'rounded-lg px-3 py-2 text-sm font-medium transition',
+              isActive(item.href)
+                ? 'text-brand-400'
+                : 'text-neutral-400 hover:bg-white/5 hover:text-white',
+            ]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href="/contatti/"
+        class="hidden rounded-lg bg-brand-500 px-4 py-2 text-sm font-semibold text-night-950 transition hover:bg-brand-400 sm:inline-block"
+      >
+        Contatti
+      </a>
+      <button
+        id="nav-toggle"
+        type="button"
+        class="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-white md:hidden"
+        aria-expanded="false"
+        aria-controls="nav-mobile"
+        aria-label="Apri il menu"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="nav-mobile" class="hidden border-t border-white/10 bg-night-950 md:hidden">
+    <nav class="container-page flex flex-col py-3" aria-label="Navigazione mobile">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'rounded-lg px-3 py-2.5 text-sm font-medium',
+              isActive(item.href) ? 'text-brand-400' : 'text-neutral-400',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a href="/contatti/" class="mt-2 rounded-lg bg-brand-500 px-3 py-2.5 text-center text-sm font-semibold text-night-950">
+        Contatti
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const toggle = document.getElementById('nav-toggle');
+    const menu = document.getElementById('nav-mobile');
+    toggle?.addEventListener('click', () => {
+      const open = menu?.classList.toggle('hidden') === false;
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+  });
+</script>

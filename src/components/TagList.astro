@@ -1,0 +1,38 @@
+---
+import { slugify } from '../lib/utils';
+
+interface Props {
+  tags: string[];
+  size?: 'sm' | 'md';
+  variant?: 'light' | 'dark';
+}
+
+const { tags, size = 'md', variant = 'light' } = Astro.props;
+
+const sizeClass = size === 'sm' ? 'px-2.5 py-0.5 text-[11px]' : 'px-3 py-1 text-xs';
+const variantClass =
+  variant === 'dark'
+    ? 'bg-white/10 text-white hover:bg-white/20'
+    : 'bg-brand-500/10 text-brand-300 hover:bg-brand-500/20';
+---
+
+{
+  tags.length > 0 && (
+    <ul class="flex flex-wrap items-center gap-2">
+      {tags.map((tag) => (
+        <li>
+          <a
+            href={`/blog/tag/${slugify(tag)}/`}
+            class:list={[
+              'inline-block rounded-full font-medium tracking-wide transition',
+              sizeClass,
+              variantClass,
+            ]}
+          >
+            #{tag}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

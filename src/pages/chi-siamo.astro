@@ -1,0 +1,269 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import AuthorCard from '../components/AuthorCard.astro';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { getCollection } from 'astro:content';
+import { SITE, CONTACT, SOCIAL } from '../config';
+
+import cover from '../content/pages/cover-chi-siamo.jpg';
+import storiaImg from '../content/blog/cover-crocedomini.jpg';
+import metodoFiere from '../assets/stock-dove-fiere.jpg';
+import metodoSerate from '../assets/stock-dove-serate.jpg';
+import metodoRistoranti from '../assets/stock-dove-ristoranti.jpg';
+import metodoEsperienze from '../assets/stock-dove-esperienze.jpg';
+
+const authors = await getCollection('authors');
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const countFor = (id: string) => posts.filter((p) => p.data.author.id === id).length;
+
+const metodo: { n: string; d: string; img: ImageMetadata }[] = [
+  { n: 'Ci deve incuriosire', d: 'Un’idea, un’atmosfera o una storia: partiamo da ciò che ci fa venire voglia di saperne di più.', img: metodoFiere },
+  { n: 'Ci andiamo davvero', d: 'Niente recensioni a distanza: partecipiamo, assaggiamo e ci facciamo un’idea sul posto.', img: metodoSerate },
+  { n: 'Facciamo caso ai dettagli', d: 'Non solo cosa c’è, ma come ci si sta: le persone, i sapori e le piccole cose che fanno la differenza.', img: metodoRistoranti },
+  { n: 'Te lo raccontiamo com’è', d: 'Condividiamo cosa ci è piaciuto e per chi può valere la visita, senza promesse da classifica.', img: metodoEsperienze },
+];
+
+const siteUrl = Astro.site ?? new URL(SITE.url);
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'Il progetto',
+    url: new URL('/chi-siamo/', siteUrl).href,
+    inLanguage: SITE.lang,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE.name,
+    url: siteUrl.href,
+    email: CONTACT.email,
+    sameAs: SOCIAL.map((s) => s.href),
+    address: { '@type': 'PostalAddress', addressLocality: 'Brescia', addressCountry: 'IT' },
+  },
+];
+---
+
+<BaseLayout
+  title="Il progetto"
+  description="Chi siamo, come nasce 3 Man's Tour e come scegliamo e raccontiamo le esperienze che viviamo."
+  image={cover}
+  imageAlt="I tre di 3 Man's Tour davanti al cartello del Tremalzo"
+  jsonLd={jsonLd}
+>
+  <Hero
+    eyebrow="Il progetto"
+    title="Il progetto"
+    subtitle="Tre amici, una curiosità condivisa e la voglia di raccontare quello che troviamo in giro."
+    image={cover}
+    imageAlt="I tre di 3 Man's Tour davanti al cartello del Tremalzo"
+  />
+
+  <!-- ================= INTRO ================= -->
+  <section class="container-narrow py-14 sm:py-20">
+    <div class="prose" data-animate>
+      <p>
+        Non vogliamo fare l’ennesima lista di posti da spuntare. Ci interessa capire cosa rende
+        speciale un’esperienza, viverla in prima persona e condividerla con uno sguardo curioso e
+        sincero.
+      </p>
+      <p>
+        Per questo visitiamo fiere, ristoranti, luoghi ed esperienze e poi raccogliamo impressioni,
+        dettagli e storie in articoli e video: senza fingere che ogni scoperta debba piacere a tutti.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= TEAM ================= -->
+  <section data-reveal class="border-t border-white/10 bg-night-900/50 py-20 sm:py-28">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center" data-animate>
+        <p class="eyebrow">Chi siamo</p>
+        <h2 class="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
+          Tre sguardi diversi
+        </h2>
+        <p class="mt-4 text-neutral-400">
+          Video, ricerca e fotografia: ognuno porta una parte diversa del racconto.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {authors.map((author) => (
+          <div data-animate>
+            <AuthorCard author={author} count={countFor(author.id)} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STORIA E NOME ================= -->
+  <section data-reveal class="border-t border-white/10 py-20 sm:py-28">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
+      <div class="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/10" data-animate>
+        <Image
+          src={storiaImg}
+          alt="Il rifugio al Passo Crocedomini, in provincia di Brescia"
+          widths={[640, 960, 1280]}
+          sizes="(min-width:1024px) 50vw, 100vw"
+          format="webp"
+          data-parallax="6"
+          class="h-full w-full object-cover"
+        />
+      </div>
+      <div data-animate>
+        <p class="eyebrow">Storia e nome</p>
+        <h2 class="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
+          Da dove arriva “3 Man’s Tour”
+        </h2>
+        <div class="mt-6 space-y-4 leading-relaxed text-neutral-400">
+          <p>
+            Tutto è iniziato dalle nostre uscite in provincia di Brescia e dalle montagne che le
+            stanno intorno: il Monte Maniva, il Passo Crocedomini, la piana del Gaver, i sentieri
+            verso il Parco dell’Adamello.
+          </p>
+          <p>
+            Nel 2024 abbiamo iniziato a mettere per iscritto quelle uscite — la prima sciata di Luca
+            sul Maniva, un’escursione improvvisata al Crocedomini, le città italiane che ci avevano
+            colpito — e da lì è nato il diario che stai leggendo.
+          </p>
+          <p>
+            Il nome racconta semplicemente chi siamo: tre amici in viaggio, come in un piccolo tour
+            continuo. Niente spedizioni estreme e niente mete a tutti i costi: solo posti e
+            situazioni che meritano di essere vissuti e raccontati.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= METODO ================= -->
+  <section data-reveal class="border-t border-white/10 bg-night-900/50 py-20 sm:py-28">
+    <div class="container-page">
+      <div class="mx-auto max-w-2xl text-center" data-animate>
+        <p class="eyebrow">Il nostro metodo</p>
+        <h2 class="mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
+          Prima ci incuriosisce. Poi ci andiamo.
+        </h2>
+      </div>
+
+      <div class="mt-12 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-14" data-dove>
+        <div class="order-2 flex flex-col divide-y divide-white/10 border-y border-white/10 lg:order-1">
+          {
+            metodo.map((item, i) => (
+              <button
+                type="button"
+                class="dove-item group flex items-start gap-4 py-6 text-left"
+                data-dove-index={i}
+                aria-pressed={i === 0 ? 'true' : 'false'}
+              >
+                <span class="pt-1.5 font-mono text-xs text-neutral-500">0{i + 1}</span>
+                <span class="flex-1">
+                  <h3
+                    class:list={[
+                      'font-display text-xl font-semibold transition sm:text-2xl',
+                      i === 0 ? 'text-white' : 'text-neutral-500 group-hover:text-white',
+                    ]}
+                  >
+                    {item.n}
+                  </h3>
+                  <p
+                    class:list={[
+                      'mt-2 text-sm leading-relaxed transition',
+                      i === 0 ? 'text-neutral-300' : 'text-neutral-500 group-hover:text-neutral-300',
+                    ]}
+                  >
+                    {item.d}
+                  </p>
+                </span>
+              </button>
+            ))
+          }
+        </div>
+
+        <div class="relative order-1 aspect-[4/3] overflow-hidden rounded-2xl border border-white/10 bg-night-900 lg:order-2 lg:aspect-auto lg:h-[540px]">
+          {
+            metodo.map((item, i) => (
+              <Image
+                src={item.img}
+                alt={item.n}
+                widths={[640, 960, 1280]}
+                sizes="(min-width:1024px) 50vw, 100vw"
+                format="webp"
+                class={`dove-image absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${i === 0 ? 'opacity-100' : 'opacity-0'}`}
+                data-dove-image={i}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DOVE SIAMO + CTA ================= -->
+  <section data-reveal class="container-page py-20 sm:py-28">
+    <div
+      class="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-night-800 to-night-900 px-8 py-16 text-center sm:px-16"
+      data-animate
+    >
+      <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-brand-500/20 blur-3xl"></div>
+      <p class="eyebrow relative">Dove siamo</p>
+      <h2 class="relative mt-4 font-display text-3xl font-semibold text-white sm:text-4xl">
+        Partiamo da {CONTACT.location}
+      </h2>
+      <p class="relative mx-auto mt-4 max-w-xl text-neutral-400">
+        Hai un posto, un evento o una storia da segnalarci? Scrivici: se merita davvero, andiamo a
+        vederlo e lo raccontiamo.
+      </p>
+      <div class="relative mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="/contatti/"
+          class="rounded-lg bg-brand-500 px-6 py-3 text-sm font-semibold text-night-950 transition hover:bg-brand-400"
+        >
+          Contattaci
+        </a>
+        <a
+          href={SOCIAL.find((s) => s.label === 'Instagram')?.href ?? '#'}
+          target="_blank"
+          rel="noopener"
+          class="rounded-lg border border-white/20 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+        >
+          Seguici su Instagram
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const root = document.querySelector('[data-dove]');
+    if (root) {
+      const items = Array.from(root.querySelectorAll<HTMLElement>('[data-dove-index]'));
+      const images = Array.from(root.querySelectorAll<HTMLElement>('[data-dove-image]'));
+      const activate = (index: number) => {
+        images.forEach((img) => {
+          const active = Number(img.dataset.doveImage) === index;
+          img.classList.toggle('opacity-100', active);
+          img.classList.toggle('opacity-0', !active);
+        });
+        items.forEach((item) => {
+          const active = Number(item.dataset.doveIndex) === index;
+          item.setAttribute('aria-pressed', String(active));
+          const h3 = item.querySelector('h3');
+          const p = item.querySelector('p');
+          h3?.classList.toggle('text-white', active);
+          h3?.classList.toggle('text-neutral-500', !active);
+          p?.classList.toggle('text-neutral-300', active);
+          p?.classList.toggle('text-neutral-500', !active);
+        });
+      };
+      items.forEach((item) => {
+        const index = Number(item.dataset.doveIndex);
+        item.addEventListener('mouseenter', () => activate(index));
+        item.addEventListener('focus', () => activate(index));
+        item.addEventListener('click', () => activate(index));
+      });
+    }
+  </script>
+</BaseLayout>

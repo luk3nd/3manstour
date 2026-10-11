@@ -1,0 +1,88 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { categoryLabel } from '../config';
+import { formatDate } from '../lib/utils';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+{
+  posts.length > 0 && (
+    <div class="swiper featured-swiper overflow-hidden">
+      <div class="swiper-wrapper">
+        {
+          posts.map((post) => (
+            <div class="swiper-slide">
+              <a
+                href={`/blog/${post.id}/`}
+                class="group relative block overflow-hidden rounded-2xl border border-white/10"
+              >
+                <Image
+                  src={post.data.cover}
+                  alt={post.data.coverAlt ?? post.data.title}
+                  widths={[640, 960, 1280]}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  format="webp"
+                  class="aspect-[16/10] w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-night-950 via-night-950/40 to-transparent" />
+                <div class="absolute inset-x-0 bottom-0 p-6 sm:p-7">
+                  <span class="eyebrow !text-brand-400">{categoryLabel(post.data.category)}</span>
+                  <h3 class="mt-2 text-xl font-semibold leading-snug text-white sm:text-2xl">
+                    {post.data.title}
+                  </h3>
+                  <p class="mt-2 line-clamp-2 max-w-2xl text-sm text-neutral-300">
+                    {post.data.description}
+                  </p>
+                  <p class="mt-3 font-mono text-xs text-neutral-400">
+                    {formatDate(post.data.pubDate)}
+                  </p>
+                </div>
+              </a>
+            </div>
+          ))
+        }
+      </div>
+      <div class="featured-pagination mt-6 flex justify-center"></div>
+    </div>
+  )
+}
+
+<script>
+  import Swiper from 'swiper';
+  import { Autoplay, Pagination } from 'swiper/modules';
+
+  document.addEventListener('astro:page-load', () => {
+    const root = document.querySelector('.featured-swiper');
+    if (root) {
+      new Swiper(root as HTMLElement, {
+        modules: [Autoplay, Pagination],
+        loop: true,
+        speed: 650,
+        autoplay: { delay: 5000, disableOnInteraction: false },
+        pagination: { el: '.featured-pagination', clickable: true },
+        breakpoints: {
+          0: { slidesPerView: 1, spaceBetween: 16 },
+          768: { slidesPerView: 2, spaceBetween: 20 },
+        },
+      });
+    }
+  });
+</script>
+
+<style>
+  .featured-swiper .swiper-pagination-bullet {
+    background: #525252;
+    opacity: 1;
+  }
+  .featured-swiper .swiper-pagination-bullet-active {
+    background: #ff6a00;
+  }
+</style>
