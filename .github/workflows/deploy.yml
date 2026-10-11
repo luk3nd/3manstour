@@ -1,0 +1,69 @@
+# Deploy automatico del sito su Plesk via rsync (SSH/SFTP).
+#
+# Ad ogni push su "main" (o avvio manuale) la Action:
+#   1. installa le dipendenze e compila il sito (npm run build)
+#   2. carica il contenuto di dist/ nella document root di Plesk
+#      trasferendo solo i file cambiati.
+#
+# Segreti da impostare in: GitHub → Settings → Secrets and variables → Actions
+#   REMOTE_HOST     es. 123.45.67.89  (o il dominio del server)
+#   REMOTE_USER     utente SSH di Plesk (spesso l'utente del sistema del dominio)
+#   REMOTE_PORT     porta SSH (tipicamente 22)
+#   REMOTE_PATH     cartella di destinazione, CON lo slash finale
+#                   es. /var/www/vhosts/3manstour.com/httpdocs/
+#   REMOTE_SSH_KEY  chiave privata SSH (contenuto del file, righe BEGIN/END incluse)
+#
+# NOTE IMPORTANTI
+# - `api/vendor/` (PHPMailer installato con Composer) è ESCLUSO da rsync: se un deploy
+#   lo cancellasse, il form contatti smetterebbe di funzionare.
+# - Se nella document root hai altri file gestiti a mano, aggiungi qui sotto un
+#   `--exclude` oppure togli `--delete` (così i file vecchi non vengono rimossi).
+# - In alternativa senza SSH si può usare FTPS (vedi README, sezione Deploy).
+
+name: Deploy su Plesk
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installa le dipendenze
+        run: npm ci
+
+      - name: Build del sito
+        run: npm run build
+
+      - name: Prepara la chiave SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.REMOTE_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p "${{ secrets.REMOTE_PORT }}" "${{ secrets.REMOTE_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Deploy (rsync)
+        run: |
+          rsync -avz --delete \
+            --exclude 'api/vendor/***' \
+            --exclude '.well-known/***' \
+            -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.REMOTE_PORT }} -o StrictHostKeyChecking=accept-new" \
+            dist/ "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_PATH }}"
