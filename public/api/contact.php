@@ -39,6 +39,26 @@ function char_length(string $value): int
     return function_exists('mb_strlen') ? mb_strlen($value) : strlen($value);
 }
 
+// --- DIAGNOSI TEMPORANEA di rete (da rimuovere) ----------------------------
+if (($_GET['diag'] ?? '') === 'net') {
+    $out = [];
+    foreach ([
+        'smtp.ionos.it:587', 'smtp.ionos.it:465', 'smtp.ionos.it:25', 'smtp.ionos.it:443',
+        'localhost:25', '127.0.0.1:25', 'localhost:587',
+    ] as $t) {
+        [$h, $p] = explode(':', $t);
+        $fp = @stream_socket_client('tcp://' . $h . ':' . $p, $en, $es, 6);
+        $out[$t] = $fp ? 'APERTO' : ('chiuso (' . $es . ')');
+        if ($fp) {
+            fclose($fp);
+        }
+    }
+    $out['dns smtp.ionos.it'] = gethostbyname('smtp.ionos.it');
+    $out['ip server'] = $_SERVER['SERVER_ADDR'] ?? '?';
+    $out['sendmail_path'] = ini_get('sendmail_path');
+    respond(200, $out);
+}
+
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     respond(405, ['ok' => false, 'error' => 'Metodo non consentito.']);
 }
