@@ -74,6 +74,16 @@ const gaId = SITE.gaMeasurementId;
     s.async = true;
     s.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
     document.head.appendChild(s);
+
+    // DIAGNOSI TEMPORANEA — verifica se gtag.js ha eseguito davvero
+    setTimeout(() => {
+      console.error(
+        '[GA-DEBUG] google_tag_manager=' +
+          typeof (window as any).google_tag_manager +
+          ' | dataLayer=' +
+          JSON.stringify((window as any).dataLayer).slice(0, 200),
+      );
+    }, 4000);
   }
 
   function readConsent(): { analytics?: boolean } | null {
