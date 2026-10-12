@@ -272,10 +272,16 @@ Le immagini importate da `src/assets/` e dai contenuti vengono **ottimizzate** i
 ### Google Analytics 4
 
 1. Imposta il Measurement ID in `src/config.ts` → `SITE.gaMeasurementId` (es. `G-XXXXXXXXXX`).
-2. `src/components/ConsentBanner.astro` mostra il banner cookie e carica GA4 **solo dopo il
-   consenso** (basic mode): prima dell'accettazione non viene contattato Google.
-3. Il link "Preferenze cookie" nel footer riapre il banner.
-4. Con `gaMeasurementId` vuoto, banner e analytics restano disattivati.
+2. Il tag Google è **statico nell'`<head>`** (`src/layouts/BaseLayout.astro`), come da istruzioni
+   Google, con **consent mode**: `analytics_storage` parte da `denied` e diventa `granted` solo
+   dopo l'accettazione. Prima del consenso non viene inviato alcun dato con cookie.
+3. `src/components/ConsentBanner.astro` mostra il banner e chiama `gtag('consent','update', …)`.
+   Il consenso salvato viene riapplicato nell'`<head>` al caricamento (per le visite successive).
+4. Il link "Preferenze cookie" nel footer riapre il banner.
+5. Con `gaMeasurementId` vuoto, tag e banner restano disattivati.
+
+> ⚠️ Il tag **deve restare statico** nell'`<head>`: caricando gtag.js via JavaScript (script
+> iniettato a runtime) gtag.js si carica ma **non invia alcun hit**. Verificato con Tag Assistant.
 
 ### Google Search Console
 

@@ -54,7 +54,7 @@ const { jsonLd, ...seo } = Astro.props;
           />
           <script
             is:inline
-            set:html={`gtag('js',new Date());gtag('config','${SITE.gaMeasurementId}');setTimeout(function(){document.title='[ga='+(document.cookie.indexOf('_ga')!==-1?'y':'n')+'] '+document.title;},6000);`}
+            set:html={`gtag('js',new Date());gtag('config','${SITE.gaMeasurementId}');`}
           />
         </>
       )
