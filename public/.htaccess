@@ -22,3 +22,9 @@ ErrorDocument 404 /404.html
   Header set X-Content-Type-Options "nosniff"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
+
+# --- Protezione file sensibili ---
+# Il deploy via Git crea una cartella .git nella document root: va resa inaccessibile.
+RedirectMatch 404 /\.git
+RedirectMatch 404 /\.env
+RedirectMatch 404 /\.gitignore

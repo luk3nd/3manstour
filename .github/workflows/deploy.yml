@@ -20,11 +20,13 @@
 #   `--exclude` oppure togli `--delete` (così i file vecchi non vengono rimossi).
 # - In alternativa senza SSH si può usare FTPS (vedi README, sezione Deploy).
 
+# NOTA: questa è la via ALTERNATIVA (rsync su SSH) e si avvia solo manualmente.
+# Il deploy usato di norma è quello via Plesk Git (vedi .github/workflows/publish.yml).
+# Avviala da GitHub → Actions → "Deploy su Plesk" → Run workflow (dopo aver impostato i segreti).
+
 name: Deploy su Plesk
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:

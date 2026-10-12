@@ -1,0 +1,75 @@
+# Pubblica il sito COMPILATO sul branch "deploy".
+#
+# Serve per il deploy con Plesk Git: Plesk pubblica il contenuto del repository,
+# quindi su "deploy" mettiamo il risultato di `npm run build` (dist/), non il sorgente.
+#
+# Flusso:
+#   push su main  ->  build (+ PHPMailer)  ->  push del sito compilato su "deploy"
+#   Plesk Git (branch "deploy", mode Automatic)  ->  pubblica nella document root
+#
+# Nota: la cronologia del branch "deploy" viene mantenuta (nessun force push), così
+# Plesk può fare pull senza conflitti.
+
+name: Pubblica sito (branch deploy)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: publish
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup PHP (per PHPMailer)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Dipendenze JS
+        run: npm ci
+
+      - name: PHPMailer (public/api/vendor)
+        run: composer install --working-dir=public/api --no-dev --optimize-autoloader
+
+      - name: Build del sito
+        run: npm run build
+
+      - name: Pubblica su branch 'deploy'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd dist
+          git init -q
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          # Mantiene la cronologia del branch deploy (se esiste)
+          git fetch -q --depth 1 origin deploy 2>/dev/null || true
+          git checkout -q -B deploy
+          if git rev-parse -q --verify FETCH_HEAD >/dev/null 2>&1; then
+            git reset -q --soft FETCH_HEAD
+            git rm -rq --cached . 2>/dev/null || true
+          fi
+
+          git add -A
+          git commit -q -m "deploy: ${GITHUB_SHA}" || echo "Nessuna modifica da pubblicare"
+          git push -q origin deploy

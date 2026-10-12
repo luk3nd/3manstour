@@ -132,11 +132,38 @@ Al primo avvio il container installa PHPMailer automaticamente
 Se non hai configurato l'SMTP, l'endpoint risponde con un messaggio chiaro e logga il
 messaggio invece di inviarlo.
 
-### Deploy automatico (GitHub Actions)
+### Deploy con Plesk Git (metodo principale)
 
-Il repository è su GitHub e `.github/workflows/deploy.yml` pubblica il sito a ogni push su `main`:
-compila in CI (`npm ci && npm run build`) e carica `dist/` nella document root di Plesk via **rsync
-su SSH**, trasferendo **solo i file cambiati**.
+Plesk Git pubblica **il contenuto del repository**, non il build. Per questo la Action
+`.github/workflows/publish.yml` compila il sito e lo spinge sul branch **`deploy`**.
+
+1. Ad ogni push su `main` la Action genera `dist/` (incluso `api/vendor` con PHPMailer) e lo
+   pubblica sul branch `deploy` (cronologia mantenuta, nessun force push).
+2. In Plesk: **Siti web e domini → Git → Aggiungi repository**:
+   - **Repository URL**: `git@github.com:luk3nd/3manstour.git` (SSH) — Plesk **non** supporta
+     l'autenticazione HTTP per i repo remoti: per un repo privato serve una chiave SSH.
+   - Plesk genera una **chiave pubblica**: aggiungila su GitHub → repo → *Settings → Deploy keys*
+     (senza write access).
+   - **Repository name**: `3manstour`
+   - **Deployment directory**: la document root del dominio (di solito `httpdocs`)
+   - **Deployment mode**: `Automatic`
+   - **Branch**: `deploy`
+   - **Post deployment actions**: nessuna (il sito è statico)
+3. Per il deploy automatico aggiungi in GitHub → *Settings → Webhooks* l'URL fornito da Plesk.
+
+> Se rendi il repository **pubblico**, puoi usare l'URL HTTPS e non serve la chiave.
+
+**Prima del primo deploy**: svuota la document root dal vecchio WordPress (file + `.htaccess`),
+altrimenti il suo `index.php` e le regole di rewrite continuano a rispondere. Fai prima un backup
+da Plesk (*Backup Manager*).
+
+### Deploy alternativo via rsync (SSH)
+
+Questa è la via alternativa (si avvia solo manualmente da GitHub → Actions). Serve l'accesso SSH.
+
+`.github/workflows/deploy.yml` compila in CI (`npm ci && npm run build`) e carica `dist/` nella
+document root di Plesk via **rsync su SSH**, trasferendo **solo i file cambiati**. Si avvia
+manualmente, dopo aver impostato i segreti.
 
 **Segreti da impostare** — GitHub → Settings → Secrets and variables → Actions:
 
