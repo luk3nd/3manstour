@@ -68,15 +68,24 @@ const gaId = SITE.gaMeasurementId;
     if (!gaId || (window as any).__ga4Loaded) return;
     (window as any).__ga4Loaded = true;
 
+    // Pattern canonico di Google: dataLayer + stub gtag, poi comandi
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    function gtag(...args: unknown[]) {
+      (window as any).dataLayer.push(args);
+    }
+    (window as any).gtag = gtag;
+
+    gtag('js', new Date());
+    gtag('config', gaId);
+
     const s = document.createElement('script');
     s.async = true;
     s.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
     s.onload = () => {
-      // gtag.js è caricato: chiamo il gtag REALE (non uno stub)
-      const gtag = (window as any).gtag;
-      if (typeof gtag === 'function') {
-        gtag('js', new Date());
-        gtag('config', gaId);
+      // Rete di sicurezza: dopo il caricamento, richiama config col gtag reale
+      const realGtag = (window as any).gtag;
+      if (typeof realGtag === 'function' && realGtag !== gtag) {
+        realGtag('config', gaId);
       }
     };
     document.head.appendChild(s);
