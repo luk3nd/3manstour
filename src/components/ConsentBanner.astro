@@ -56,19 +56,11 @@ const gaId = SITE.gaMeasurementId;
 <script>
   const STORAGE_KEY = 'cookie-consent';
 
-  // DIAGNOSI TEMPORANEA — traccia le richieste verso Google Analytics
-  const __gaReq: string[] = [];
-  const _sb = navigator.sendBeacon.bind(navigator);
-  navigator.sendBeacon = (u: any, d: any) => { __gaReq.push(String(u)); return _sb(u, d); };
-  const _f = window.fetch.bind(window);
-  window.fetch = (u: any, o: any) => { __gaReq.push(String(u)); return _f(u, o); };
-  (window as any).__gaReq = __gaReq;
-
   function loadGA(gaId: string) {
     if (!gaId || (window as any).__ga4Loaded) return;
     (window as any).__ga4Loaded = true;
 
-    // Pattern canonico di Google: dataLayer + stub gtag, poi comandi
+    // Pattern canonico di Google: dataLayer + stub gtag, poi comandi, poi script
     (window as any).dataLayer = (window as any).dataLayer || [];
     function gtag(...args: unknown[]) {
       (window as any).dataLayer.push(args);
@@ -81,23 +73,7 @@ const gaId = SITE.gaMeasurementId;
     const s = document.createElement('script');
     s.async = true;
     s.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-    s.onload = () => {
-      // Rete di sicurezza: dopo il caricamento, richiama config col gtag reale
-      const realGtag = (window as any).gtag;
-      if (typeof realGtag === 'function' && realGtag !== gtag) {
-        realGtag('config', gaId);
-      }
-    };
     document.head.appendChild(s);
-
-    // DIAGNOSI TEMPORANEA — verifica se l'hit è partito
-    setTimeout(() => {
-      const gtm = typeof (window as any).google_tag_manager;
-      const hasGa = document.cookie.includes('_ga');
-      const reqs = (window as any).__gaReq || [];
-      const req = reqs.some((u: string) => /google-analytics/.test(u));
-      document.title = `[gtm=${gtm} ga=${hasGa ? 'y' : 'n'} req=${req ? 'y' : 'n'}] ${document.title}`;
-    }, 6000);
   }
 
   function readConsent(): { analytics?: boolean } | null {
