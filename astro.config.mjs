@@ -7,8 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 // URL di produzione: cambia qui (e in src/config.ts) quando avrai il dominio.
 export default defineConfig({
   site: 'https://www.3manstour.com',
-  // URL senza slash finale (es. /contatti).
-  // Il .htaccess serve /pagina da /pagina/index.html e reindirizza /pagina/ verso /pagina.
+  // URL senza slash finale (es. /contatti)
   trailingSlash: 'never',
 
   integrations: [
