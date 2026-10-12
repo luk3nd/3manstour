@@ -3,7 +3,7 @@
         'name' => 'openchamber/contact-endpoint',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '0d66105e8afb7eae9ff22ebe18f740f108c3aace',
+        'reference' => 'b79d06533d4397030c9188bd8d02de27e8dc9455',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'openchamber/contact-endpoint' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '0d66105e8afb7eae9ff22ebe18f740f108c3aace',
+            'reference' => 'b79d06533d4397030c9188bd8d02de27e8dc9455',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
