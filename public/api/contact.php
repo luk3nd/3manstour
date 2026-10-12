@@ -39,67 +39,6 @@ function char_length(string $value): int
     return function_exists('mb_strlen') ? mb_strlen($value) : strlen($value);
 }
 
-// --- DIAGNOSI TEMPORANEA di rete (da rimuovere) ----------------------------
-if (($_GET['diag'] ?? '') === 'net') {
-    $out = [];
-    foreach ([
-        'smtp.ionos.it:587', 'smtp.ionos.it:465', 'smtp.ionos.it:25', 'smtp.ionos.it:443',
-        'localhost:25', '127.0.0.1:25', 'localhost:587',
-    ] as $t) {
-        [$h, $p] = explode(':', $t);
-        $fp = @stream_socket_client('tcp://' . $h . ':' . $p, $en, $es, 6);
-        $out[$t] = $fp ? 'APERTO' : ('chiuso (' . $es . ')');
-        if ($fp) {
-            fclose($fp);
-        }
-    }
-    $out['dns smtp.ionos.it'] = gethostbyname('smtp.ionos.it');
-    $out['ip server'] = $_SERVER['SERVER_ADDR'] ?? '?';
-    $out['sendmail_path'] = ini_get('sendmail_path');
-    respond(200, $out);
-}
-
-if (($_GET['diag'] ?? '') === 'smtp') {
-    $out = [];
-    $t0 = microtime(true);
-    $fp = @stream_socket_client('tcp://smtp.ionos.it:587', $en, $es, 15);
-    if (!$fp) {
-        respond(200, ['connect' => $es]);
-    }
-    stream_set_timeout($fp, 15);
-    $out['tcp_connect_s'] = round(microtime(true) - $t0, 2);
-
-    $read = function () use ($fp): array {
-        $buf = '';
-        $t = microtime(true);
-        while (($line = fgets($fp, 1024)) !== false) {
-            $buf .= $line;
-            if (preg_match('/^\d{3} /', $line)) {
-                break;
-            }
-        }
-        return ['s' => round(microtime(true) - $t, 2), 'data' => trim($buf)];
-    };
-
-    $r = $read();
-    $out['banner'] = $r['data'] !== '' ? $r['data'] : '(nessun banner)';
-    $out['banner_s'] = $r['s'];
-
-    fwrite($fp, "EHLO 3manstour.com\r\n");
-    $r = $read();
-    $out['ehlo'] = $r['data'] !== '' ? $r['data'] : '(nessuna risposta)';
-    $out['ehlo_s'] = $r['s'];
-
-    fwrite($fp, "STARTTLS\r\n");
-    $r = $read();
-    $out['starttls'] = $r['data'] !== '' ? $r['data'] : '(nessuna risposta)';
-
-    $ok = @stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
-    $out['tls_handshake'] = $ok ? 'OK' : 'FALLITO';
-    fclose($fp);
-    respond(200, $out);
-}
-
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     respond(405, ['ok' => false, 'error' => 'Metodo non consentito.']);
 }
@@ -236,10 +175,5 @@ try {
     respond(200, ['ok' => true]);
 } catch (Exception $e) {
     error_log('[contact] Errore invio: ' . $e->getMessage());
-    respond(500, [
-        'ok' => false,
-        'error' => 'Invio non riuscito. Riprova più tardi.',
-        'debug' => $e->getMessage(),
-        'debug_smtp' => isset($mail) ? $mail->ErrorInfo : '',
-    ]);
+    respond(500, ['ok' => false, 'error' => 'Invio non riuscito. Riprova più tardi.']);
 }

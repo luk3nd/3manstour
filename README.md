@@ -127,11 +127,11 @@ Formato del file locale (restituisce un array):
 ```php
 <?php
 return [
-    'SMTP_HOST' => 'mail.3manstour.com',
-    'SMTP_PORT' => '587',
+    'SMTP_HOST' => 'smtp.ionos.it', // IONOS (il dominio ha la posta su IONOS)
+    'SMTP_PORT' => '465',
     'SMTP_USER' => 'info@3manstour.com',
     'SMTP_PASS' => 'la-password-della-casella',
-    'SMTP_SECURE' => 'tls', // tls | ssl | none
+    'SMTP_SECURE' => 'ssl', // IONOS usa 465 + SSL/TLS
     'MAIL_FROM' => 'info@3manstour.com',
     'MAIL_FROM_NAME' => "3 Man's Tour",
     'CONTACT_TO' => 'info@3manstour.com',
