@@ -39,42 +39,26 @@ const { jsonLd, ...seo } = Astro.props;
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <ClientRouter />
 
-    <!-- DIAGNOSI TEMPORANEA: traccia le richieste a Google Analytics -->
-    <script is:inline>
-      window.__gaReq = [];
-      (function () {
-        var sb = navigator.sendBeacon && navigator.sendBeacon.bind(navigator);
-        if (sb)
-          navigator.sendBeacon = function (u, d) {
-            window.__gaReq.push(String(u));
-            return sb(u, d);
-          };
-        var f = window.fetch && window.fetch.bind(window);
-        if (f)
-          window.fetch = function (u, o) {
-            window.__gaReq.push(String(u));
-            return f(u, o);
-          };
-      })();
-    </script>
-
-    <!-- Google tag (gtag.js) — TEST STATICO -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F4HMDVHG4N"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-F4HMDVHG4N');
-      setTimeout(function () {
-        var hasGa = document.cookie.indexOf('_ga') !== -1;
-        var req = (window.__gaReq || []).some(function (u) {
-          return /google-analytics/.test(u);
-        });
-        document.title = '[ga=' + (hasGa ? 'y' : 'n') + ' req=' + (req ? 'y' : 'n') + '] ' + document.title;
-      }, 6000);
-    </script>
+    {
+      SITE.gaMeasurementId && (
+        <>
+          {/* Consent mode: nessun dato finché l'utente non accetta */}
+          <script
+            is:inline
+            set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});try{var c=JSON.parse(localStorage.getItem('cookie-consent')||'null');if(c&&c.analytics){gtag('consent','update',{analytics_storage:'granted'});}}catch(e){}`}
+          />
+          {/* Google tag (gtag.js) */}
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${SITE.gaMeasurementId}`}
+          />
+          <script
+            is:inline
+            set:html={`gtag('js',new Date());gtag('config','${SITE.gaMeasurementId}');setTimeout(function(){document.title='[ga='+(document.cookie.indexOf('_ga')!==-1?'y':'n')+'] '+document.title;},6000);`}
+          />
+        </>
+      )
+    }
 
     <script is:inline>
       document.documentElement.classList.add('js');
