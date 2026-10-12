@@ -7,12 +7,12 @@ import type { ImageMetadata } from 'astro';
 import { getCollection } from 'astro:content';
 import { SITE, CONTACT, SOCIAL } from '../config';
 
-import cover from '../content/pages/cover-chi-siamo.jpg';
-import storiaImg from '../content/blog/cover-crocedomini.jpg';
-import metodoFiere from '../assets/stock-dove-fiere.jpg';
-import metodoSerate from '../assets/stock-dove-serate.jpg';
-import metodoRistoranti from '../assets/stock-dove-ristoranti.jpg';
-import metodoEsperienze from '../assets/stock-dove-esperienze.jpg';
+import cover from '../content/pages/3mans-tour-il-progetto.jpg';
+import storiaImg from '../content/blog/passo-crocedomini.jpg';
+import metodoFiere from '../assets/metodo-fiere.jpg';
+import metodoSerate from '../assets/metodo-serate.jpg';
+import metodoRistoranti from '../assets/metodo-ristoranti.jpg';
+import metodoEsperienze from '../assets/metodo-esperienze.jpg';
 
 const authors = await getCollection('authors');
 const posts = await getCollection('blog', ({ data }) => !data.draft);

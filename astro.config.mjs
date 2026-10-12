@@ -10,6 +10,9 @@ export default defineConfig({
   // URL senza slash finale (es. /contatti)
   trailingSlash: 'never',
 
+  // Le immagini vanno in /images/ (URL leggibili). Il resto degli asset in /_astro/.
+  build: { assets: 'images' },
+
   integrations: [
     mdx(),
     sitemap({
@@ -20,5 +23,18 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        output: {
+          // Solo le immagini vanno in /images/; il resto (CSS, JS, font) resta in /_astro/
+          assetFileNames: (assetInfo) => {
+            const name = assetInfo.names?.[0] ?? assetInfo.name ?? '';
+            return /\.(jpe?g|png|gif|webp|avif|svg|ico)$/i.test(name)
+              ? 'images/[name].[hash][extname]'
+              : '_astro/[name].[hash][extname]';
+          },
+        },
+      },
+    },
   },
 });

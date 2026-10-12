@@ -241,6 +241,24 @@ Servono due cose, che vanno mantenute insieme:
 
 Quando aggiungi pagine o link, scrivili **senza** slash finale.
 
+## Immagini
+
+Le immagini importate da `src/assets/` e dai contenuti vengono **ottimizzate** in build
+(WebP/AVIF, più dimensioni) e pubblicate in **`/images/`** con nome descrittivo + hash:
+
+```
+/images/passo-crocedomini.a1b2c3.webp
+/images/3mans-tour-logo.Cn0bSxgS.webp
+```
+
+- `astro.config.mjs` → `build.assets: 'images'` manda gli asset in `/images/`; una regola Vite
+  tiene CSS, JS e font in `/_astro/`.
+- `scripts/postbuild.mjs` (eseguito da `npm run build`) sposta in `/_astro/` gli eventuali file
+  non-immagine che Astro scrive nella cartella degli asset.
+- L'hash nel nome serve per la **cache** (1 anno): quando l'immagine cambia, cambia il nome.
+- Per aggiungere o sostituire un'immagine, lavora sul file in `src/assets/` o nel contenuto.
+  **Non gestire a mano `/images/`**: è generata a ogni build.
+
 ## SEO
 
 - Sitemap generata automaticamente in `/sitemap-index.xml`
