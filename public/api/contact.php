@@ -175,5 +175,10 @@ try {
     respond(200, ['ok' => true]);
 } catch (Exception $e) {
     error_log('[contact] Errore invio: ' . $e->getMessage());
-    respond(500, ['ok' => false, 'error' => 'Invio non riuscito. Riprova più tardi.']);
+    respond(500, [
+        'ok' => false,
+        'error' => 'Invio non riuscito. Riprova più tardi.',
+        'debug' => $e->getMessage(),
+        'debug_smtp' => isset($mail) ? $mail->ErrorInfo : '',
+    ]);
 }
