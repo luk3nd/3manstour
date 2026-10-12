@@ -75,14 +75,11 @@ const gaId = SITE.gaMeasurementId;
     s.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
     document.head.appendChild(s);
 
-    // DIAGNOSI TEMPORANEA — verifica se gtag.js ha eseguito davvero
+    // DIAGNOSI TEMPORANEA — verifica se gtag.js ha eseguito e ha inviato l'hit
     setTimeout(() => {
-      console.error(
-        '[GA-DEBUG] google_tag_manager=' +
-          typeof (window as any).google_tag_manager +
-          ' | dataLayer=' +
-          JSON.stringify((window as any).dataLayer).slice(0, 200),
-      );
+      const gtm = typeof (window as any).google_tag_manager;
+      const hasGa = document.cookie.includes('_ga');
+      document.title = `[gtm=${gtm} ga=${hasGa ? 'y' : 'n'}] ${document.title}`;
     }, 4000);
   }
 
