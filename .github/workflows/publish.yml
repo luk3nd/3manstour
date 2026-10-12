@@ -52,6 +52,11 @@ jobs:
       - name: Build del sito
         run: npm run build
 
+      - name: Sicurezza: nessun file di configurazione locale nel build
+        run: |
+          find dist -name "*.local.php" -delete 2>/dev/null || true
+          find dist -name ".env*" -delete 2>/dev/null || true
+
       - name: Pubblica su branch 'deploy'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

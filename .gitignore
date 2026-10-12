@@ -18,6 +18,11 @@ pnpm-debug.log*
 .env.production
 .env.local
 
+# configurazione locale (credenziali SMTP) — NON versionare
+api-config.local.php
+public/api/config.local.php
+*.local.php
+
 # composer (PHPMailer vendor)
 public/api/vendor/
 public/api/composer.lock
