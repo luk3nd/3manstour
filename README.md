@@ -140,18 +140,17 @@ Plesk Git pubblica **il contenuto del repository**, non il build. Per questo la 
 1. Ad ogni push su `main` la Action genera `dist/` (incluso `api/vendor` con PHPMailer) e lo
    pubblica sul branch `deploy` (cronologia mantenuta, nessun force push).
 2. In Plesk: **Siti web e domini → Git → Aggiungi repository**:
-   - **Repository URL**: `git@github.com:luk3nd/3manstour.git` (SSH) — Plesk **non** supporta
-     l'autenticazione HTTP per i repo remoti: per un repo privato serve una chiave SSH.
-   - Plesk genera una **chiave pubblica**: aggiungila su GitHub → repo → *Settings → Deploy keys*
-     (senza write access).
+   - **Repository URL**: `https://github.com/luk3nd/3manstour.git` (repo **pubblico** → nessuna
+     autenticazione)
    - **Repository name**: `3manstour`
-   - **Deployment directory**: la document root del dominio (di solito `httpdocs`)
+   - **Deployment directory**: `httpdocs`
    - **Deployment mode**: `Automatic`
    - **Branch**: `deploy`
    - **Post deployment actions**: nessuna (il sito è statico)
 3. Per il deploy automatico aggiungi in GitHub → *Settings → Webhooks* l'URL fornito da Plesk.
 
-> Se rendi il repository **pubblico**, puoi usare l'URL HTTPS e non serve la chiave.
+> Repo **privato** (alternativa): Plesk non supporta l'autenticazione HTTP per i repo remoti,
+> servirebbe l'URL SSH `git@github.com:luk3nd/3manstour.git` + una **Deploy key** generata da Plesk.
 
 **Prima del primo deploy**: svuota la document root dal vecchio WordPress (file + `.htaccess`),
 altrimenti il suo `index.php` e le regole di rewrite continuano a rispondere. Fai prima un backup
