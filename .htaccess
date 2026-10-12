@@ -23,8 +23,19 @@ ErrorDocument 404 /404.html
   Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
 
+# --- Canonical host: 3manstour.com -> www.3manstour.com ---
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^3manstour\.com$ [NC]
+  RewriteRule ^ https://www.3manstour.com%{REQUEST_URI} [R=301,L]
+</IfModule>
+
 # --- Protezione file sensibili ---
 # Il deploy via Git crea una cartella .git nella document root: va resa inaccessibile.
 RedirectMatch 404 /\.git
 RedirectMatch 404 /\.env
 RedirectMatch 404 /\.gitignore
+# Codice di terze parti e file di configurazione non devono essere richiamabili via web.
+RedirectMatch 404 /api/vendor
+RedirectMatch 404 /api/composer\.(json|lock)
+RedirectMatch 404 /\.local\.php
