@@ -111,10 +111,31 @@ il tema scuro.)
 ## Modulo contatti (PHP + SMTP)
 
 L'endpoint è `public/api/contact.php` (in build diventa `dist/api/contact.php`).
-Usa **PHPMailer** via Composer e legge la configurazione dalle variabili d'ambiente.
+Usa **PHPMailer** via Composer e legge la configurazione in questo ordine:
+
+1. file locale **non versionato** (sopravvive ai deploy — consigliato in produzione):
+   - `<document root>/../api-config.local.php` (fuori dalla document root)
+   - `api/config.local.php`
+2. variabili d'ambiente (comode in locale):
 
 ```bash
 cp .env.example .env     # poi compila host, porta, utente, password reali
+```
+
+Formato del file locale (restituisce un array):
+
+```php
+<?php
+return [
+    'SMTP_HOST' => 'mail.3manstour.com',
+    'SMTP_PORT' => '587',
+    'SMTP_USER' => 'info@3manstour.com',
+    'SMTP_PASS' => 'la-password-della-casella',
+    'SMTP_SECURE' => 'tls', // tls | ssl | none
+    'MAIL_FROM' => 'info@3manstour.com',
+    'MAIL_FROM_NAME' => "3 Man's Tour",
+    'CONTACT_TO' => 'info@3manstour.com',
+];
 ```
 
 ### Test locale con OrbStack / Docker
@@ -184,8 +205,9 @@ manualmente, dopo aver impostato i segreti.
 
 **Attenzione**
 
-- `api/vendor/` è **escluso** dal deploy (il form contatti usa PHPMailer via Composer). Se serve,
-  installalo sul server con `composer install --working-dir=api`.
+- Con il deploy via **Plesk Git** `api/vendor/` è **incluso** (la Action installa PHPMailer prima
+  del build). Nel workflow rsync è invece escluso: lì serve `composer install --working-dir=api`
+  sul server.
 - Il flag `--delete` rimuove dalla document root i file non presenti in `dist/` (tranne gli
   esclusi). Se hai file gestiti a mano sul server, aggiungi un `--exclude` o togli `--delete`.
 - Alternativa **senza SSH**: un'azione FTPS (es. `SamKirkland/FTP-Deploy-Action`) carica solo i file
@@ -198,8 +220,9 @@ manualmente, dopo aver impostato i segreti.
 3. Assicurati che la cartella `api/` contenga `contact.php` e il `vendor/` di PHPMailer
    (esegui `composer install --working-dir=api` sul server, oppure carica il `vendor/`
    generato in locale).
-4. Imposta le variabili SMTP tra le impostazioni PHP di Plesk (o usa un file incluso non
-   versionato). I nominativi sono gli stessi di `.env.example`.
+4. Crea `api-config.local.php` **accanto a `httpdocs`** (fuori dalla document root) con le
+   credenziali SMTP, come descritto in "Modulo contatti": non è versionato, quindi i deploy non
+   lo toccano.
 5. Se cambi il dominio, aggiorna l'URL in **due punti**: `astro.config.mjs` e `src/config.ts`.
 
 ## SEO

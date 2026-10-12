@@ -5,9 +5,11 @@ declare(strict_types=1);
  * Endpoint del modulo contatti.
  * Riceve una POST (JSON oppure form-encoded) e invia l'email via SMTP (PHPMailer).
  *
- * La configurazione SMTP arriva dalle variabili d'ambiente (vedi .env / .env.example).
- * In alternativa puoi impostarle direttamente su Plesk (PHP settings) o in un file
- * non versionato incluso qui sotto.
+ * La configurazione SMTP si legge in quest'ordine:
+ *   1) file locale NON versionato (consigliato su Plesk, non viene toccato dai deploy):
+ *        - <document root>/../api-config.local.php   (fuori dalla document root)
+ *        - api/config.local.php                      (accanto a questo script)
+ *   2) variabili d'ambiente (vedi .env / .env.example).
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -55,14 +57,37 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 // --- Configurazione --------------------------------------------------------
-$smtpHost   = env('SMTP_HOST');
-$smtpPort   = (int) env('SMTP_PORT', '587');
-$smtpUser   = env('SMTP_USER');
-$smtpPass   = env('SMTP_PASS');
-$smtpSecure = strtolower(env('SMTP_SECURE', 'tls')); // tls | ssl | none
-$mailFrom   = env('MAIL_FROM', $smtpUser);
-$mailFromNm = env('MAIL_FROM_NAME', 'Sito web');
-$mailTo     = env('CONTACT_TO', $mailFrom);
+// Priorità: 1) file locale non versionato  2) variabili d'ambiente.
+$localConfig = [];
+foreach ([
+    dirname(__DIR__, 2) . '/api-config.local.php', // fuori dalla document root (consigliato)
+    __DIR__ . '/config.local.php',                 // accanto a questo script
+] as $localFile) {
+    if (is_file($localFile)) {
+        $loaded = require $localFile;
+        if (is_array($loaded)) {
+            $localConfig = $loaded;
+            break;
+        }
+    }
+}
+
+/** Legge la configurazione locale o, in mancanza, le variabili d'ambiente. */
+function cfg(string $key, string $default = ''): string
+{
+    global $localConfig;
+    $value = $localConfig[$key] ?? env($key, '');
+    return $value !== '' ? (string) $value : $default;
+}
+
+$smtpHost   = cfg('SMTP_HOST');
+$smtpPort   = (int) cfg('SMTP_PORT', '587');
+$smtpUser   = cfg('SMTP_USER');
+$smtpPass   = cfg('SMTP_PASS');
+$smtpSecure = strtolower(cfg('SMTP_SECURE', 'tls')); // tls | ssl | none
+$mailFrom   = cfg('MAIL_FROM', $smtpUser);
+$mailFromNm = cfg('MAIL_FROM_NAME', 'Sito web');
+$mailTo     = cfg('CONTACT_TO', $mailFrom);
 
 // --- Lettura input ---------------------------------------------------------
 $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
