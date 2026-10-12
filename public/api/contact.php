@@ -59,6 +59,47 @@ if (($_GET['diag'] ?? '') === 'net') {
     respond(200, $out);
 }
 
+if (($_GET['diag'] ?? '') === 'smtp') {
+    $out = [];
+    $t0 = microtime(true);
+    $fp = @stream_socket_client('tcp://smtp.ionos.it:587', $en, $es, 15);
+    if (!$fp) {
+        respond(200, ['connect' => $es]);
+    }
+    stream_set_timeout($fp, 15);
+    $out['tcp_connect_s'] = round(microtime(true) - $t0, 2);
+
+    $read = function () use ($fp): array {
+        $buf = '';
+        $t = microtime(true);
+        while (($line = fgets($fp, 1024)) !== false) {
+            $buf .= $line;
+            if (preg_match('/^\d{3} /', $line)) {
+                break;
+            }
+        }
+        return ['s' => round(microtime(true) - $t, 2), 'data' => trim($buf)];
+    };
+
+    $r = $read();
+    $out['banner'] = $r['data'] !== '' ? $r['data'] : '(nessun banner)';
+    $out['banner_s'] = $r['s'];
+
+    fwrite($fp, "EHLO 3manstour.com\r\n");
+    $r = $read();
+    $out['ehlo'] = $r['data'] !== '' ? $r['data'] : '(nessuna risposta)';
+    $out['ehlo_s'] = $r['s'];
+
+    fwrite($fp, "STARTTLS\r\n");
+    $r = $read();
+    $out['starttls'] = $r['data'] !== '' ? $r['data'] : '(nessuna risposta)';
+
+    $ok = @stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+    $out['tls_handshake'] = $ok ? 'OK' : 'FALLITO';
+    fclose($fp);
+    respond(200, $out);
+}
+
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     respond(405, ['ok' => false, 'error' => 'Metodo non consentito.']);
 }
