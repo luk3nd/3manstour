@@ -101,7 +101,7 @@ $name     = trim((string) ($data['name'] ?? ''));
 $email    = trim((string) ($data['email'] ?? ''));
 $subject  = trim((string) ($data['subject'] ?? ''));
 $message  = trim((string) ($data['message'] ?? ''));
-$honeypot = trim((string) ($data['company'] ?? ''));
+$honeypot = trim((string) ($data['cf_hp'] ?? ''));
 
 // Antispam: se l'honeypot è compilato, è un bot. Fingiamo successo.
 if ($honeypot !== '') {

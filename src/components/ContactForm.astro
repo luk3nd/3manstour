@@ -32,10 +32,12 @@ const labelClass = 'block text-sm font-medium text-neutral-200';
     <textarea id="cf-message" name="message" required rows="6" class={inputClass} placeholder="Scrivici il tuo messaggio…"></textarea>
   </div>
 
-  <!-- Honeypot antispam: campo nascosto, deve restare vuoto -->
+  <!-- Honeypot antispam: campo nascosto, deve restare vuoto.
+       Il nome "cf_hp" (non "company") evita che l'autocompilazione del browser
+       lo riempia: "company" è un token di autofill riconosciuto da Chrome. -->
   <div class="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
-    <label for="cf-company">Non compilare questo campo</label>
-    <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+    <label for="cf-hp">Non compilare questo campo</label>
+    <input id="cf-hp" name="cf_hp" type="text" tabindex="-1" autocomplete="off" />
   </div>
 
   <div class="flex items-start gap-2.5">
