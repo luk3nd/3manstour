@@ -60,27 +60,25 @@ const gaId = SITE.gaMeasurementId;
     if (!gaId || (window as any).__ga4Loaded) return;
     (window as any).__ga4Loaded = true;
 
-    // Snippet canonico di Google: dataLayer e comandi PRIMA, script alla fine.
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    function gtag(...args: unknown[]) {
-      (window as any).dataLayer.push(args);
-    }
-    (window as any).gtag = gtag;
-
-    gtag('js', new Date());
-    gtag('config', gaId);
-
     const s = document.createElement('script');
     s.async = true;
     s.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+    s.onload = () => {
+      // gtag.js è caricato: chiamo il gtag REALE (non uno stub)
+      const gtag = (window as any).gtag;
+      if (typeof gtag === 'function') {
+        gtag('js', new Date());
+        gtag('config', gaId);
+      }
+    };
     document.head.appendChild(s);
 
-    // DIAGNOSI TEMPORANEA — verifica se gtag.js ha eseguito e ha inviato l'hit
+    // DIAGNOSI TEMPORANEA — verifica se l'hit è partito
     setTimeout(() => {
       const gtm = typeof (window as any).google_tag_manager;
       const hasGa = document.cookie.includes('_ga');
       document.title = `[gtm=${gtm} ga=${hasGa ? 'y' : 'n'}] ${document.title}`;
-    }, 4000);
+    }, 6000);
   }
 
   function readConsent(): { analytics?: boolean } | null {
