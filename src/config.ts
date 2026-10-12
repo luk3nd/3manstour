@@ -11,7 +11,7 @@ export const SITE = {
   twitter: '', // es. '@3manstour'
   defaultOgImage: '/og-default.jpg',
   /** Google Analytics 4 Measurement ID (es. 'G-XXXXXXXXXX'). Vuoto = analytics disattivato. */
-  gaMeasurementId: '',
+  gaMeasurementId: 'G-F4HMDVHG4N',
   /** Codice di verifica Google Search Console (meta tag). Vuoto = nessun meta. */
   googleSiteVerification: '',
 };
