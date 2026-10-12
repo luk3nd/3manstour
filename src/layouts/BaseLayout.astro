@@ -38,6 +38,44 @@ const { jsonLd, ...seo } = Astro.props;
     <SEO {...seo} />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <ClientRouter />
+
+    <!-- DIAGNOSI TEMPORANEA: traccia le richieste a Google Analytics -->
+    <script is:inline>
+      window.__gaReq = [];
+      (function () {
+        var sb = navigator.sendBeacon && navigator.sendBeacon.bind(navigator);
+        if (sb)
+          navigator.sendBeacon = function (u, d) {
+            window.__gaReq.push(String(u));
+            return sb(u, d);
+          };
+        var f = window.fetch && window.fetch.bind(window);
+        if (f)
+          window.fetch = function (u, o) {
+            window.__gaReq.push(String(u));
+            return f(u, o);
+          };
+      })();
+    </script>
+
+    <!-- Google tag (gtag.js) — TEST STATICO -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F4HMDVHG4N"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-F4HMDVHG4N');
+      setTimeout(function () {
+        var hasGa = document.cookie.indexOf('_ga') !== -1;
+        var req = (window.__gaReq || []).some(function (u) {
+          return /google-analytics/.test(u);
+        });
+        document.title = '[ga=' + (hasGa ? 'y' : 'n') + ' req=' + (req ? 'y' : 'n') + '] ' + document.title;
+      }, 6000);
+    </script>
+
     <script is:inline>
       document.documentElement.classList.add('js');
       window.addEventListener('load', function () {
