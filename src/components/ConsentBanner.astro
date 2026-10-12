@@ -56,6 +56,14 @@ const gaId = SITE.gaMeasurementId;
 <script>
   const STORAGE_KEY = 'cookie-consent';
 
+  // DIAGNOSI TEMPORANEA — traccia le richieste verso Google Analytics
+  const __gaReq: string[] = [];
+  const _sb = navigator.sendBeacon.bind(navigator);
+  navigator.sendBeacon = (u: any, d: any) => { __gaReq.push(String(u)); return _sb(u, d); };
+  const _f = window.fetch.bind(window);
+  window.fetch = (u: any, o: any) => { __gaReq.push(String(u)); return _f(u, o); };
+  (window as any).__gaReq = __gaReq;
+
   function loadGA(gaId: string) {
     if (!gaId || (window as any).__ga4Loaded) return;
     (window as any).__ga4Loaded = true;
@@ -77,7 +85,9 @@ const gaId = SITE.gaMeasurementId;
     setTimeout(() => {
       const gtm = typeof (window as any).google_tag_manager;
       const hasGa = document.cookie.includes('_ga');
-      document.title = `[gtm=${gtm} ga=${hasGa ? 'y' : 'n'}] ${document.title}`;
+      const reqs = (window as any).__gaReq || [];
+      const req = reqs.some((u: string) => /google-analytics/.test(u));
+      document.title = `[gtm=${gtm} ga=${hasGa ? 'y' : 'n'} req=${req ? 'y' : 'n'}] ${document.title}`;
     }, 6000);
   }
 
