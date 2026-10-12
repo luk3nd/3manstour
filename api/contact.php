@@ -39,68 +39,6 @@ function char_length(string $value): int
     return function_exists('mb_strlen') ? mb_strlen($value) : strlen($value);
 }
 
-// --- DIAGNOSI TEMPORANEA (da rimuovere) ------------------------------------
-if (($_GET['diag'] ?? '') === 'full') {
-    $out = [];
-    $cfg = [];
-    foreach ([
-        'sopra httpdocs' => dirname(__DIR__, 2) . '/api-config.local.php',
-        'in api/' => __DIR__ . '/config.local.php',
-    ] as $label => $f) {
-        $out['file ' . $label] = is_file($f) ? 'presente' : 'assente';
-        if (is_file($f) && !$cfg) {
-            $loaded = require $f;
-            if (is_array($loaded)) {
-                $cfg = $loaded;
-                $out['file_usato'] = $label;
-            }
-        }
-    }
-
-    $host = (string) ($cfg['SMTP_HOST'] ?? '');
-    $port = (int) ($cfg['SMTP_PORT'] ?? 0);
-    $secure = strtolower((string) ($cfg['SMTP_SECURE'] ?? 'tls'));
-    $out['host'] = $host !== '' ? $host : '(assente)';
-    $out['port'] = $port > 0 ? $port : '(assente)';
-    $out['secure'] = $secure;
-    $out['user'] = (string) ($cfg['SMTP_USER'] ?? '(assente)');
-    $out['pass_len'] = strlen((string) ($cfg['SMTP_PASS'] ?? ''));
-
-    if ($host !== '' && $port > 0) {
-        $transport = ($secure === 'ssl' || $port === 465) ? 'ssl' : 'tcp';
-        $t0 = microtime(true);
-        $fp = @stream_socket_client($transport . '://' . $host . ':' . $port, $en, $es, 15);
-        $out['raw_' . $transport] = $fp ? 'OK' : ('FALLITO (' . $es . ')');
-        $out['raw_s'] = round(microtime(true) - $t0, 2);
-        if ($fp) {
-            fclose($fp);
-        }
-
-        $autoload = __DIR__ . '/vendor/autoload.php';
-        if (is_file($autoload)) {
-            require $autoload;
-            $m = new \PHPMailer\PHPMailer\PHPMailer(true);
-            try {
-                $m->isSMTP();
-                $m->Host = $host;
-                $m->Port = $port;
-                $m->SMTPAuth = ($cfg['SMTP_USER'] ?? '') !== '';
-                $m->Username = (string) ($cfg['SMTP_USER'] ?? '');
-                $m->Password = (string) ($cfg['SMTP_PASS'] ?? '');
-                $m->SMTPSecure = $secure === 'ssl' ? 'ssl' : ($secure === 'none' ? '' : 'tls');
-                $m->Timeout = 20;
-                $m->smtpConnect();
-                $out['phpmailer'] = 'connessione e login OK';
-            } catch (\Throwable $e) {
-                $out['phpmailer'] = $e->getMessage();
-                $out['phpmailer_info'] = $m->ErrorInfo;
-            }
-        }
-    }
-
-    respond(200, $out);
-}
-
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     respond(405, ['ok' => false, 'error' => 'Metodo non consentito.']);
 }
@@ -146,7 +84,7 @@ $smtpHost   = cfg('SMTP_HOST');
 $smtpPort   = (int) cfg('SMTP_PORT', '587');
 $smtpUser   = cfg('SMTP_USER');
 $smtpPass   = cfg('SMTP_PASS');
-$smtpSecure = strtolower(cfg('SMTP_SECURE', 'tls')); // tls | ssl | none
+$smtpSecure = strtolower(trim(cfg('SMTP_SECURE', 'tls'))); // ssl | ssl/tls | tls | none
 $mailFrom   = cfg('MAIL_FROM', $smtpUser);
 $mailFromNm = cfg('MAIL_FROM_NAME', 'Sito web');
 $mailTo     = cfg('CONTACT_TO', $mailFrom);
@@ -211,7 +149,8 @@ try {
         $mail->Password = $smtpPass;
     }
 
-    if ($smtpSecure === 'ssl') {
+    // Riconosce "ssl", "ssl/tls", "smtps"; la porta 465 implica sempre TLS implicito.
+    if (str_contains($smtpSecure, 'ssl') || $smtpPort === 465) {
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     } elseif ($smtpSecure === 'none') {
         $mail->SMTPAutoTLS = false;
