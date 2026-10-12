@@ -225,6 +225,22 @@ manualmente, dopo aver impostato i segreti.
    lo toccano.
 5. Se cambi il dominio, aggiorna l'URL in **due punti**: `astro.config.mjs` e `src/config.ts`.
 
+## URL (senza slash finale)
+
+Le URL del sito **non** hanno lo slash finale: `/contatti`, `/blog/categoria/fiere`.
+Servono due cose, che vanno mantenute insieme:
+
+1. **`astro.config.mjs`** → `trailingSlash: 'never'`: sistema link, `canonical`, sitemap e RSS.
+   L'integrazione RSS vuole anche `trailingSlash: false` (di default lo aggiungerebbe).
+2. **`public/.htaccess`** → `DirectorySlash Off` + le regole di rewrite:
+   - `/pagina/` → **301** verso `/pagina`
+   - `/pagina` → serve `/pagina/index.html` **senza** cambiare l'URL
+
+> ⚠️ `DirectorySlash Off` è indispensabile: senza, Apache rimanda `/contatti` a `/contatti/`
+> e insieme alla regola 301 si crea un **loop di redirect**.
+
+Quando aggiungi pagine o link, scrivili **senza** slash finale.
+
 ## SEO
 
 - Sitemap generata automaticamente in `/sitemap-index.xml`
