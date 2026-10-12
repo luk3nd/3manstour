@@ -36,7 +36,7 @@ const year = new Date().getFullYear();
         {
           CATEGORIES.map((c) => (
             <li>
-              <a href={`/blog/categoria/${c.slug}/`} class="text-neutral-400 transition hover:text-brand-400">
+              <a href={`/blog/categoria/${c.slug}`} class="text-neutral-400 transition hover:text-brand-400">
                 {c.label}
               </a>
             </li>
@@ -71,8 +71,8 @@ const year = new Date().getFullYear();
     <div class="container-page flex flex-col items-center justify-between gap-3 py-6 text-sm text-neutral-500 sm:flex-row">
       <p>© {year} {SITE.name}. Tutti i diritti riservati.</p>
       <ul class="flex items-center gap-5">
-        <li><a href="/privacy-policy/" class="transition hover:text-brand-400">Privacy</a></li>
-        <li><a href="/cookie-policy/" class="transition hover:text-brand-400">Cookie</a></li>
+        <li><a href="/privacy-policy" class="transition hover:text-brand-400">Privacy</a></li>
+        <li><a href="/cookie-policy" class="transition hover:text-brand-400">Cookie</a></li>
         {SITE.gaMeasurementId && (
           <li>
             <button id="consent-reopen" type="button" class="transition hover:text-brand-400">

@@ -21,7 +21,7 @@ const { tags } = Astro.props;
 
 <p class="mt-4 hidden text-sm text-neutral-500" data-filter-empty>
   Nessun articolo con questo tag in questa pagina.
-  <a data-filter-link href="/blog/" class="font-medium text-brand-400 underline">Vedi tutto l'archivio</a>.
+  <a data-filter-link href="/blog" class="font-medium text-brand-400 underline">Vedi tutto l'archivio</a>.
 </p>
 
 <script>
@@ -43,7 +43,7 @@ const { tags } = Astro.props;
       }
       emptyMsg?.classList.toggle('hidden', visible > 0);
       if (emptyLink) {
-        emptyLink.href = filter === 'all' ? '/blog/' : `/blog/tag/${filter}/`;
+        emptyLink.href = filter === 'all' ? '/blog' : `/blog/tag/${filter}`;
       }
       buttons.forEach((b) => b.classList.toggle('is-active', b.dataset.filter === filter));
     };

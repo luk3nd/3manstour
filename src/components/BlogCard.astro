@@ -19,7 +19,7 @@ const tagSlugs = (tags ?? []).map((t) => slugify(t));
   data-post-card
   data-tags={tagSlugs.join(',')}
 >
-  <a href={`/blog/${post.id}/`} class="block overflow-hidden" tabindex="-1" aria-hidden="true">
+  <a href={`/blog/${post.id}`} class="block overflow-hidden" tabindex="-1" aria-hidden="true">
     <Image
       src={cover}
       alt={coverAlt ?? title}
@@ -31,7 +31,7 @@ const tagSlugs = (tags ?? []).map((t) => slugify(t));
   </a>
   <div class="flex flex-1 flex-col p-6">
     <div class="flex items-center justify-between gap-3">
-      <a href={`/blog/categoria/${slugify(category)}/`} class="eyebrow !text-brand-400 transition hover:!text-brand-300">
+      <a href={`/blog/categoria/${slugify(category)}`} class="eyebrow !text-brand-400 transition hover:!text-brand-300">
         {categoryLabel(category)}
       </a>
       <time datetime={isoDate(pubDate)} class="font-mono text-xs text-neutral-500">
@@ -39,7 +39,7 @@ const tagSlugs = (tags ?? []).map((t) => slugify(t));
       </time>
     </div>
     <h3 class="mt-3 text-lg font-semibold leading-snug text-white">
-      <a href={`/blog/${post.id}/`} class="transition hover:text-brand-400">{title}</a>
+      <a href={`/blog/${post.id}`} class="transition hover:text-brand-400">{title}</a>
     </h3>
     <p class="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-neutral-400">
       {excerpt(description, 150)}

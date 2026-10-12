@@ -18,10 +18,10 @@ export const SITE = {
 
 export const NAV = [
   { label: 'Home', href: '/' },
-  { label: 'Esplora', href: '/blog/' },
-  { label: 'Autori', href: '/autori/' },
-  { label: 'Il progetto', href: '/chi-siamo/' },
-  { label: 'Contatti', href: '/contatti/' },
+  { label: 'Esplora', href: '/blog' },
+  { label: 'Autori', href: '/autori' },
+  { label: 'Il progetto', href: '/chi-siamo' },
+  { label: 'Contatti', href: '/contatti' },
 ];
 
 export const CONTACT = {

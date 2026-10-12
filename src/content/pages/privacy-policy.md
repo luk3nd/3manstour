@@ -32,7 +32,7 @@ all'indirizzo **info@3manstour.com** per qualsiasi richiesta relativa ai tuoi da
 Il sito utilizza cookie tecnici e, previo consenso dell'utente, cookie di analisi tramite
 **Google Analytics 4**. Il consenso è facoltativo, viene richiesto con un banner al primo accesso
 e può essere revocato in qualsiasi momento dal link "Preferenze cookie" nel piè di pagina.
-Per i dettagli si rimanda alla [Cookie Policy](/cookie-policy/). Il fornitore del servizio di
+Per i dettagli si rimanda alla [Cookie Policy](/cookie-policy). Il fornitore del servizio di
 analisi (Google Ireland Limited) agisce come responsabile del trattamento secondo la propria
 [privacy policy](https://policies.google.com/privacy).
 

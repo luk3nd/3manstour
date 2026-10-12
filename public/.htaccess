@@ -23,11 +23,21 @@ ErrorDocument 404 /404.html
   Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
 
-# --- Canonical host: 3manstour.com -> www.3manstour.com ---
+# --- URL canoniche ---
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # Host canonico: 3manstour.com -> www.3manstour.com
   RewriteCond %{HTTP_HOST} ^3manstour\.com$ [NC]
   RewriteRule ^ https://www.3manstour.com%{REQUEST_URI} [R=301,L]
+
+  # Niente slash finale: /pagina/ -> /pagina (la home resta "/")
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # Serve /pagina da /pagina/index.html, senza reindirizzare l'URL
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+)$ /$1/index.html [L]
 </IfModule>
 
 # --- Protezione file sensibili ---

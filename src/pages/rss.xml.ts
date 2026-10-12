@@ -12,11 +12,13 @@ export async function GET(context: APIContext) {
     title: SITE.title,
     description: SITE.description,
     site: context.site ?? SITE.url,
+    // Le URL del sito non hanno slash finale (l'RSS di default lo aggiungerebbe)
+    trailingSlash: false,
     items: posts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.pubDate,
       description: post.data.description,
-      link: `/blog/${post.id}/`,
+      link: `/blog/${post.id}`,
       categories: post.data.tags,
     })),
     customData: `<language>${SITE.lang}</language>`,

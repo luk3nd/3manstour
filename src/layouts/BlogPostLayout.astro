@@ -28,7 +28,7 @@ const jsonLd = {
   author: {
     '@type': 'Person',
     name: author.data.name,
-    url: new URL(`/autori/${author.id}/`, siteUrl).href,
+    url: new URL(`/autori/${author.id}`, siteUrl).href,
   },
   image: new URL(cover.src, siteUrl).href,
   articleSection: categoryLabel(category),
@@ -51,7 +51,7 @@ const jsonLd = {
   <article>
     <Hero title={title} subtitle={description} image={cover} imageAlt={coverAlt ?? title}>
       <div class="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-neutral-300">
-        <a href={`/autori/${author.id}/`} class="flex items-center gap-2 transition hover:text-white">
+        <a href={`/autori/${author.id}`} class="flex items-center gap-2 transition hover:text-white">
           <Image
             src={author.data.avatar}
             alt={author.data.name}
@@ -68,7 +68,7 @@ const jsonLd = {
         <span>{readingMinutes} min di lettura</span>
       </div>
       <div class="mt-5 flex flex-wrap items-center justify-center gap-4">
-        <a href={`/blog/categoria/${category}/`} class="eyebrow !text-brand-400 transition hover:!text-brand-300">
+        <a href={`/blog/categoria/${category}`} class="eyebrow !text-brand-400 transition hover:!text-brand-300">
           {categoryLabel(category)}
         </a>
         <TagList tags={tags} variant="dark" />
