@@ -6,6 +6,8 @@ import TagFilter from '../../components/TagFilter.astro';
 import Pagination from '../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 import { uniqueTags } from '../../lib/utils';
+import { SITE } from '../../config';
+import { breadcrumb } from '../../lib/schema';
 import type { Page } from 'astro';
 
 export async function getStaticPaths({ paginate }: { paginate: any }) {
@@ -18,16 +20,22 @@ export async function getStaticPaths({ paginate }: { paginate: any }) {
 const { page } = Astro.props as { page: Page };
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const tags = uniqueTags(allPosts);
+
+const siteUrl = Astro.site ?? new URL(SITE.url);
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Esplora' }];
+const jsonLd = breadcrumb(crumbs, siteUrl);
 ---
 
 <BaseLayout
   title="Esplora"
   description="Il diario di 3 Man's Tour: fiere, locali, ristoranti, luoghi ed esperienze raccontati dal nostro team."
+  jsonLd={jsonLd}
 >
   <Hero
     eyebrow="Esplora"
     title="Il diario"
     subtitle="Fiere, locali, ristoranti, luoghi ed esperienze. Filtra per argomento o sfoglia l'archivio."
+    breadcrumb={crumbs}
   />
 
   <section class="container-page py-12 sm:py-16">

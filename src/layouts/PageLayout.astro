@@ -1,7 +1,10 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Faq from '../components/Faq.astro';
 import type { ImageMetadata } from 'astro';
+import { SITE } from '../config';
+import { webPage } from '../lib/schema';
 
 interface Props {
   title: string;
@@ -11,9 +14,15 @@ interface Props {
   cover?: ImageMetadata;
   coverAlt?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  faq?: { question: string; answer: string }[];
 }
 
-const { title, subtitle, eyebrow, description, cover, coverAlt, jsonLd } = Astro.props;
+const { title, subtitle, eyebrow, description, cover, coverAlt, jsonLd, faq } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL(SITE.url);
+const schema =
+  jsonLd ??
+  webPage({ name: title, description: description ?? subtitle, url: Astro.url.pathname }, siteUrl);
 ---
 
 <BaseLayout
@@ -21,7 +30,7 @@ const { title, subtitle, eyebrow, description, cover, coverAlt, jsonLd } = Astro
   description={description ?? subtitle ?? title}
   image={cover}
   imageAlt={coverAlt}
-  jsonLd={jsonLd}
+  jsonLd={schema}
 >
   <Hero title={title} subtitle={subtitle} eyebrow={eyebrow} image={cover} imageAlt={coverAlt} />
 
@@ -30,4 +39,6 @@ const { title, subtitle, eyebrow, description, cover, coverAlt, jsonLd } = Astro
       <slot />
     </article>
   </div>
+
+  <Faq items={faq} />
 </BaseLayout>

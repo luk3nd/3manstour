@@ -4,6 +4,8 @@ import Hero from '../../../components/Hero.astro';
 import BlogCard from '../../../components/BlogCard.astro';
 import { getCollection } from 'astro:content';
 import { slugify } from '../../../lib/utils';
+import { SITE } from '../../../config';
+import { breadcrumb } from '../../../lib/schema';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -25,16 +27,26 @@ export async function getStaticPaths() {
 }
 
 const { tag, posts } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL(SITE.url);
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Esplora', url: '/blog' },
+  { name: `#${tag}` },
+];
+const jsonLd = breadcrumb(crumbs, siteUrl);
 ---
 
 <BaseLayout
   title={`Articoli con tag #${tag}`}
   description={`Tutti gli articoli di 3 Man's Tour contrassegnati con il tag #${tag}.`}
+  jsonLd={jsonLd}
 >
   <Hero
     eyebrow="Archivio tag"
     title={`#${tag}`}
     subtitle={`${posts.length} ${posts.length === 1 ? 'articolo' : 'articoli'} con questo tag.`}
+    breadcrumb={crumbs}
   >
     <a href="/blog" class="mt-6 inline-block text-sm font-medium text-brand-300 hover:text-white">
       ← Torna a tutti gli articoli

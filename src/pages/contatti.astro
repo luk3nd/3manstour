@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { CONTACT, SITE } from '../config';
+import { organization } from '../lib/schema';
 
 const items = [
   { label: 'Email', value: CONTACT.email, href: `mailto:${CONTACT.email}` },
@@ -10,11 +11,24 @@ const items = [
   { label: 'Indirizzo', value: CONTACT.address, href: '' },
   { label: 'Dove siamo', value: CONTACT.location, href: '' },
 ].filter((item) => item.value);
+
+const siteUrl = Astro.site ?? new URL(SITE.url);
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Contatti',
+    url: new URL('/contatti', siteUrl).href,
+    inLanguage: SITE.lang,
+  },
+  organization(siteUrl),
+];
 ---
 
 <BaseLayout
   title="Contatti"
   description={`Contatta ${SITE.name}: segnala un luogo, proponi una collaborazione o scrivici.`}
+  jsonLd={jsonLd}
 >
   <Hero
     eyebrow="Contatti"

@@ -11,7 +11,8 @@ import stockFiere from '../assets/fiere.jpg';
 import stockRistoranti from '../assets/ristoranti.jpg';
 import stockLuoghi from '../assets/luoghi.jpg';
 import stockEsperienze from '../assets/esperienze.jpg';
-import { SITE, CATEGORIES, SOCIAL, CONTACT } from '../config';
+import { SITE, CATEGORIES } from '../config';
+import { organization } from '../lib/schema';
 
 const categoryImages: Record<string, ImageMetadata> = {
   fiere: stockFiere,
@@ -40,16 +41,7 @@ const jsonLd = [
     description: SITE.description,
     inLanguage: SITE.lang,
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: SITE.name,
-    url: siteUrl.href,
-    logo: new URL('/favicon.png', siteUrl).href,
-    email: CONTACT.email,
-    sameAs: SOCIAL.map((s) => s.href),
-    address: { '@type': 'PostalAddress', addressLocality: 'Brescia', addressCountry: 'IT' },
-  },
+  organization(siteUrl),
 ];
 ---
 

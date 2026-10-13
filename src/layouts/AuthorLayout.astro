@@ -15,6 +15,12 @@ const { author, posts } = Astro.props;
 const { name, role, bio, avatar, socials } = author.data;
 
 const siteUrl = Astro.site ?? new URL(SITE.url);
+
+const socialEntries = Object.entries(socials ?? {}).filter(([, href]) =>
+  Boolean(href),
+) as [string, string][];
+const sameAs = socialEntries.map(([, href]) => href);
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
@@ -24,12 +30,14 @@ const jsonLd = {
     description: bio,
     image: new URL(avatar.src, siteUrl).href,
     url: new URL(Astro.url.pathname, siteUrl).href,
+    ...(sameAs.length > 0 ? { sameAs } : {}),
   },
 };
 
-const socialItems = Object.entries(socials ?? {})
-  .filter(([, href]) => Boolean(href))
-  .map(([key, href]) => ({ label: key.charAt(0).toUpperCase() + key.slice(1), href: href as string }));
+const socialItems = socialEntries.map(([key, href]) => ({
+  label: key.charAt(0).toUpperCase() + key.slice(1),
+  href,
+}));
 ---
 
 <BaseLayout

@@ -253,6 +253,15 @@ html.js [data-animate] {
   border: 1px solid #262626;
 }
 
+/* Video incorporati (YouTube) responsivi */
+.prose .video-embed iframe {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+  border: 0;
+  display: block;
+}
+
 .prose hr {
   border: 0;
   border-top: 1px solid #262626;

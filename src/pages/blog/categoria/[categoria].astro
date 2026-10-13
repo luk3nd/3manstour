@@ -3,7 +3,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Hero from '../../../components/Hero.astro';
 import BlogCard from '../../../components/BlogCard.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORIES } from '../../../config';
+import { CATEGORIES, SITE } from '../../../config';
+import { breadcrumb } from '../../../lib/schema';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -16,10 +17,23 @@ export async function getStaticPaths() {
 }
 
 const { category, posts } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL(SITE.url);
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Esplora', url: '/blog' },
+  { name: category.label },
+];
+const jsonLd = breadcrumb(crumbs, siteUrl);
 ---
 
-<BaseLayout title={category.label} description={category.description}>
-  <Hero eyebrow="Categoria" title={category.label} subtitle={category.description}>
+<BaseLayout title={category.label} description={category.description} jsonLd={jsonLd}>
+  <Hero
+    eyebrow="Categoria"
+    title={category.label}
+    subtitle={category.description}
+    breadcrumb={crumbs}
+  >
     <a href="/blog" class="mt-6 inline-block text-sm font-medium text-brand-300 transition hover:text-white">
       ← Torna a tutti gli articoli
     </a>

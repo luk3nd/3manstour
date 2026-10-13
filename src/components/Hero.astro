@@ -10,6 +10,7 @@ interface Props {
   imageAlt?: string;
   align?: 'center' | 'left';
   minHeight?: string;
+  breadcrumb?: { name: string; url?: string }[];
 }
 
 const {
@@ -20,6 +21,7 @@ const {
   imageAlt = '',
   align = 'center',
   minHeight = 'py-24 sm:py-32',
+  breadcrumb,
 } = Astro.props;
 
 const alignment = align === 'center' ? 'items-center text-center' : 'items-start text-left';
@@ -45,6 +47,35 @@ const alignment = align === 'center' ? 'items-center text-center' : 'items-start
 
   <div class:list={['container-page relative flex flex-col', minHeight, alignment]}>
     <div class:list={['max-w-3xl', align === 'center' && 'mx-auto']}>
+      {
+        breadcrumb && breadcrumb.length > 0 && (
+          <nav aria-label="Percorso" class="mb-5">
+            <ol
+              class:list={[
+                'flex flex-wrap items-center gap-x-2 gap-y-1 text-xs',
+                align === 'center' && 'justify-center',
+              ]}
+            >
+              {breadcrumb.map((item, i) => (
+                <li class="flex items-center gap-2">
+                  {i > 0 && (
+                    <span aria-hidden="true" class="text-neutral-600">
+                      /
+                    </span>
+                  )}
+                  {item.url ? (
+                    <a href={item.url} class="text-neutral-400 transition hover:text-brand-400">
+                      {item.name}
+                    </a>
+                  ) : (
+                    <span class="text-neutral-300">{item.name}</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
       {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
       <h1 class="font-display text-4xl font-semibold leading-tight text-white sm:text-5xl">{title}</h1>
       {subtitle && <p class="mt-5 text-lg leading-relaxed text-neutral-300 sm:text-xl">{subtitle}</p>}

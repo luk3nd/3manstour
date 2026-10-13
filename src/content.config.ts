@@ -56,6 +56,15 @@ const blog = defineCollection({
         .default([]),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
+      /** Domande frequenti specifiche dell'articolo (sezione in fondo + markup FAQPage). */
+      faq: z
+        .array(
+          z.object({
+            question: z.string(),
+            answer: z.string(),
+          }),
+        )
+        .default([]),
     }),
 });
 
@@ -75,6 +84,15 @@ const pages = defineCollection({
       updatedDate: z.coerce.date().optional(),
       draft: z.boolean().default(false),
       order: z.number().default(0),
+      /** Domande frequenti della pagina (sezione in fondo + markup FAQPage). */
+      faq: z
+        .array(
+          z.object({
+            question: z.string(),
+            answer: z.string(),
+          }),
+        )
+        .default([]),
     }),
 });
 

@@ -5,10 +5,12 @@ import TagList from '../components/TagList.astro';
 import AuthorBio from '../components/AuthorBio.astro';
 import PostToc from '../components/PostToc.astro';
 import PostSidebar from '../components/PostSidebar.astro';
+import Faq from '../components/Faq.astro';
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { formatDate, isoDate } from '../lib/utils';
 import { categoryLabel, SITE } from '../config';
+import { breadcrumb } from '../lib/schema';
 
 interface Heading {
   depth: number;
@@ -25,26 +27,41 @@ interface Props {
 }
 
 const { post, author, readingMinutes, headings, latest } = Astro.props;
-const { title, description, pubDate, updatedDate, cover, coverAlt, tags, category } = post.data;
+const { title, description, pubDate, updatedDate, cover, coverAlt, tags, category, faq } =
+  post.data;
 
 const siteUrl = Astro.site ?? new URL(SITE.url);
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  headline: title,
-  description,
-  datePublished: pubDate.toISOString(),
-  dateModified: (updatedDate ?? pubDate).toISOString(),
-  author: {
-    '@type': 'Person',
-    name: author.data.name,
-    url: new URL(`/autori/${author.id}`, siteUrl).href,
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Esplora', url: '/blog' },
+  { name: categoryLabel(category), url: `/blog/categoria/${category}` },
+  { name: title },
+];
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description,
+    datePublished: pubDate.toISOString(),
+    dateModified: (updatedDate ?? pubDate).toISOString(),
+    author: {
+      '@type': 'Person',
+      name: author.data.name,
+      url: new URL(`/autori/${author.id}`, siteUrl).href,
+    },
+    image: new URL(cover.src, siteUrl).href,
+    articleSection: categoryLabel(category),
+    mainEntityOfPage: new URL(Astro.url.pathname, siteUrl).href,
+    publisher: {
+      '@type': 'Organization',
+      name: SITE.name,
+      url: siteUrl.href,
+      logo: { '@type': 'ImageObject', url: new URL('/favicon.png', siteUrl).href },
+    },
   },
-  image: new URL(cover.src, siteUrl).href,
-  articleSection: categoryLabel(category),
-  mainEntityOfPage: new URL(Astro.url.pathname, siteUrl).href,
-  publisher: { '@type': 'Organization', name: SITE.name },
-};
+  breadcrumb(crumbs, siteUrl),
+];
 ---
 
 <BaseLayout
@@ -59,7 +76,13 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <article>
-    <Hero title={title} subtitle={description} image={cover} imageAlt={coverAlt ?? title}>
+    <Hero
+      title={title}
+      subtitle={description}
+      image={cover}
+      imageAlt={coverAlt ?? title}
+      breadcrumb={crumbs}
+    >
       <div class="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-neutral-300">
         <a href={`/autori/${author.id}`} class="flex items-center gap-2 transition hover:text-white">
           <Image
@@ -115,5 +138,7 @@ const jsonLd = {
         </div>
       </div>
     </div>
+
+    <Faq items={faq} />
   </article>
 </BaseLayout>
