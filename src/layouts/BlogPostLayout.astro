@@ -30,6 +30,10 @@ const { post, author, readingMinutes, headings, latest } = Astro.props;
 const { title, description, pubDate, updatedDate, cover, coverAlt, tags, category, faq } =
   post.data;
 
+// Se l'articolo ha delle FAQ, aggiungiamo la voce all'indice (la sezione ha id="faq")
+const tocHeadings =
+  faq.length > 0 ? [...headings, { depth: 2, slug: 'faq', text: 'Domande frequenti' }] : headings;
+
 const siteUrl = Astro.site ?? new URL(SITE.url);
 const crumbs = [
   { name: 'Home', url: '/' },
@@ -114,7 +118,7 @@ const jsonLd = [
       >
         <!-- Indice dei titoli (collassabile su mobile, colonna sinistra da xl) -->
         <aside class="xl:sticky xl:top-24 xl:self-start">
-          <PostToc headings={headings} />
+          <PostToc headings={tocHeadings} />
         </aside>
 
         <!-- Articolo -->
