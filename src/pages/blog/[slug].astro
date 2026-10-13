@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 const author = await getEntry(post.data.author);
 if (!author) {
@@ -20,8 +20,19 @@ if (!author) {
 }
 
 const readingMinutes = readingTime(post.body ?? '');
+
+const latest = (await getCollection('blog', ({ data }) => !data.draft))
+  .filter((entry) => entry.id !== post.id)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
 ---
 
-<BlogPostLayout post={post} author={author} readingMinutes={readingMinutes}>
+<BlogPostLayout
+  post={post}
+  author={author}
+  readingMinutes={readingMinutes}
+  headings={headings}
+  latest={latest}
+>
   <Content />
 </BlogPostLayout>

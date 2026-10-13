@@ -173,6 +173,11 @@ html.js [data-animate] {
   font-size: 1.1rem;
 }
 
+/* Le ancore dei titoli non finiscono sotto l'header sticky */
+.prose :is(h2, h3, h4, h5, h6) {
+  scroll-margin-top: 6rem;
+}
+
 .prose a {
   color: var(--color-brand-400);
   text-decoration: underline;

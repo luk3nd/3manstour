@@ -1,0 +1,67 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length > 0 && (
+    <>
+      {/* Mobile/tablet: indice collassabile */}
+      <details class="group rounded-2xl border border-white/10 bg-night-900 px-5 py-4 xl:hidden">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+          <span class="eyebrow">Indice</span>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            class="text-neutral-400 transition group-open:rotate-180"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </summary>
+        <nav class="mt-4" aria-label="Indice dell'articolo">
+          <ol class="space-y-2 border-l border-white/10 pl-4 text-sm">
+            {items.map((h) => (
+              <li class={h.depth === 3 ? 'pl-4' : ''}>
+                <a href={`#${h.slug}`} class="text-neutral-400 transition hover:text-brand-400">
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </details>
+
+      {/* Desktop: colonna sinistra, segue lo scorrimento */}
+      <nav class="hidden xl:block" aria-label="Indice dell'articolo">
+        <p class="eyebrow">Indice</p>
+        <ol class="mt-4 space-y-2 border-l border-white/10 pl-4 text-sm">
+          {items.map((h) => (
+            <li class={h.depth === 3 ? 'pl-4' : ''}>
+              <a
+                href={`#${h.slug}`}
+                class="block py-0.5 text-neutral-400 transition hover:text-brand-400"
+              >
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </>
+  )
+}
