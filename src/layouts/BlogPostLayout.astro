@@ -123,13 +123,13 @@ const jsonLd = [
             <slot />
           </div>
 
+          <Faq items={faq} />
+
           {updatedDate && (
             <p class="mt-10 text-sm text-neutral-500">
               Ultimo aggiornamento: {formatDate(updatedDate)}
             </p>
           )}
-
-          <Faq items={faq} />
 
           <AuthorBio author={author} />
         </div>
