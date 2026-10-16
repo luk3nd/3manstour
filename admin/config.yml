@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+#
+# Configurazione di Sveltia CMS per 3 Man's Tour.
+# Accesso: https://www.3manstour.com/admin  (login con token GitHub)
+#
+# I contenuti restano gli stessi file del repository: il CMS li legge e li riscrive,
+# poi il commit fa partire il deploy automatico.
+
+backend:
+  name: github
+  repo: luk3nd/3manstour
+  branch: main
+
+# Pubblicazione immediata (salva = online). Le bozze si gestiscono col campo "Bozza".
+publish_mode: simple
+
+# Immagini: salvate accanto ai contenuti (come nel repo) e riferite con il solo
+# nome file, es. cover: "foto.jpg" — che è quello che Astro si aspetta.
+media_folder: src/content/blog
+public_folder: '.'
+
+collections:
+  - name: blog
+    label: Articoli
+    label_singular: Articolo
+    folder: src/content/blog
+    extension: mdx
+    format: frontmatter
+    media_folder: ''
+    public_folder: ''
+    summary: '{{title}}'
+    sortable_fields: [pubDate, title]
+    view_filters:
+      - { label: 'Bozze', field: draft, pattern: true }
+      - { label: 'In evidenza', field: featured, pattern: true }
+    fields:
+      - { label: Titolo, name: title, widget: string }
+      - { label: Descrizione, name: description, widget: text, hint: 'Una o due frasi: SEO e anteprime' }
+      - { label: Data di pubblicazione, name: pubDate, widget: datetime, type: date, format: yyyy-MM-dd }
+      - { label: Ultimo aggiornamento, name: updatedDate, widget: datetime, type: date, format: yyyy-MM-dd, required: false }
+      - { label: Copertina, name: cover, widget: image }
+      - { label: Descrizione copertina, name: coverAlt, widget: string, required: false, hint: 'Testo alternativo per accessibilità' }
+      - { label: Autore, name: author, widget: select, options: [luca, stefano, guido] }
+      - label: Categoria
+        name: category
+        widget: select
+        options: [fiere, ristoranti, luoghi, esperienze]
+      - label: Tag
+        name: tags
+        widget: select
+        multiple: true
+        options: [eventi, fiere, luoghi, esplorazione, città, fuori Italia, cibo, design]
+      - { label: Bozza, name: draft, widget: boolean, default: true }
+      - { label: In evidenza in home, name: featured, widget: boolean, default: false }
+      - label: Domande frequenti
+        name: faq
+        widget: list
+        required: false
+        summary: '{{fields.question}}'
+        hint: 'Specifiche di questo articolo. Se vuote, la sezione non compare.'
+        fields:
+          - { label: Domanda, name: question, widget: string }
+          - { label: Risposta, name: answer, widget: text }
+      - { label: Testo dell'articolo, name: body, widget: markdown }
+
+  - name: pages
+    label: Pagine
+    label_singular: Pagina
+    folder: src/content/pages
+    extension: md
+    format: frontmatter
+    media_folder: ''
+    public_folder: ''
+    summary: '{{title}}'
+    fields:
+      - { label: Titolo, name: title, widget: string }
+      - { label: Sottotitolo, name: subtitle, widget: string, required: false }
+      - { label: Descrizione, name: description, widget: text, hint: 'Per la SEO' }
+      - { label: Copertina, name: cover, widget: image, required: false }
+      - { label: Descrizione copertina, name: coverAlt, widget: string, required: false }
+      - { label: Ultimo aggiornamento, name: updatedDate, widget: datetime, type: date, format: yyyy-MM-dd, required: false }
+      - { label: Bozza, name: draft, widget: boolean, default: false }
+      - { label: Ordine, name: order, widget: number, default: 0, required: false }
+      - label: Domande frequenti
+        name: faq
+        widget: list
+        required: false
+        summary: '{{fields.question}}'
+        fields:
+          - { label: Domanda, name: question, widget: string }
+          - { label: Risposta, name: answer, widget: text }
+      - { label: Testo, name: body, widget: markdown }
