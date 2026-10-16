@@ -28,7 +28,7 @@ collections:
     format: frontmatter
     media_folder: ''
     public_folder: ''
-    summary: "{{draft | ternary('**BOZZA** · ', '')}}{{title}}"
+    summary: "{{draft | ternary('🟠 BOZZA · ', '')}}{{title}}"
     sortable_fields: [pubDate, title]
     view_filters:
       - { label: 'Bozze', field: draft, pattern: true }
@@ -71,7 +71,7 @@ collections:
     format: frontmatter
     media_folder: ''
     public_folder: ''
-    summary: "{{draft | ternary('**BOZZA** · ', '')}}{{title}}"
+    summary: "{{draft | ternary('🟠 BOZZA · ', '')}}{{title}}"
     fields:
       - { label: Titolo, name: title, widget: string }
       - { label: Sottotitolo, name: subtitle, widget: string, required: false }
