@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
 #
 # Configurazione di Sveltia CMS per 3 Man's Tour.
-# Accesso: https://www.3manstour.com/admin  (login con token GitHub)
+# Accesso: https://www.3manstour.com/admin  (login con GitHub o token personale)
 #
 # I contenuti restano gli stessi file del repository: il CMS li legge e li riscrive,
 # poi il commit fa partire il deploy automatico.
@@ -10,6 +10,9 @@ backend:
   name: github
   repo: luk3nd/3manstour
   branch: main
+  # Autenticazione OAuth tramite il Worker "sveltia-cms-auth" su Cloudflare.
+  # Senza base_url resta disponibile solo il login con token personale.
+  base_url: https://sveltia-cms-auth.lucapi0603.workers.dev
 
 # Pubblicazione immediata (salva = online). Le bozze si gestiscono col campo "Bozza".
 publish_mode: simple
