@@ -55,6 +55,17 @@ collections:
         options: [eventi, fiere, luoghi, esplorazione, città, fuori Italia, cibo, design]
       - { label: Bozza, name: draft, widget: boolean, default: true }
       - { label: In evidenza in home, name: featured, widget: boolean, default: false }
+      # Scheda del "Reportage scelto" in home: tutti facoltativi.
+      - { label: Dove, name: place, widget: string, required: false, hint: 'Es. Passo Crocedomini (BS)' }
+      - { label: Quota, name: altitude, widget: string, required: false, hint: 'Es. 1.895 m' }
+      - { label: Tempo, name: duration, widget: string, required: false, hint: 'Es. 2 giorni' }
+      - { label: Con chi, name: withWhom, widget: string, required: false, hint: 'Es. Stefano + la Gilera' }
+      - label: Cosa abbiamo trovato
+        name: highlights
+        widget: list
+        required: false
+        hint: 'Fino a 3 punti. Se vuoto, il blocco non compare.'
+        field: { label: Punto, name: punto, widget: string }
       - label: Domande frequenti
         name: faq
         widget: list
@@ -93,3 +104,20 @@ collections:
           - { label: Domanda, name: question, widget: string }
           - { label: Risposta, name: answer, widget: text }
       - { label: Testo, name: body, widget: markdown }
+
+  - name: gallery
+    label: Galleria
+    label_singular: Foto
+    folder: src/content/gallery
+    extension: md
+    format: frontmatter
+    media_folder: ''
+    public_folder: ''
+    summary: '{{draft | ternary(''🟠 BOZZA · '', '''')}}{{caption}}'
+    sortable_fields: [order]
+    fields:
+      - { label: Foto, name: image, widget: image }
+      - { label: Descrizione (alt), name: alt, widget: string, hint: 'Cosa si vede. Serve per accessibilità e SEO.' }
+      - { label: Didascalia, name: caption, widget: string, required: false }
+      - { label: Ordine, name: order, widget: number, default: 0, hint: 'Più basso = prima in galleria' }
+      - { label: Bozza, name: draft, widget: boolean, default: false }
