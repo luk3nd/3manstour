@@ -1,0 +1,97 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { categoryLabel } from '../config';
+import { formatDate } from '../lib/utils';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { data } = post;
+
+const meta = [
+  { k: 'Dove', v: data.place },
+  { k: 'Quota', v: data.altitude },
+  { k: 'Tempo', v: data.duration },
+  { k: 'Con chi', v: data.withWhom },
+].filter((item): item is { k: string; v: string } => Boolean(item.v));
+---
+
+<section id="reportage" class="container-page py-20 sm:py-28">
+  <div class="grid gap-10 border-t border-white/10 pt-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:gap-16">
+    <figure data-animate>
+      <div class="overflow-hidden rounded-2xl border border-white/10">
+        <Image
+          src={data.cover}
+          alt={data.coverAlt ?? data.title}
+          widths={[600, 900, 1200]}
+          sizes="(min-width:1024px) 40vw, 100vw"
+          format="webp"
+          class="aspect-[4/5] w-full object-cover"
+        />
+      </div>
+      <figcaption class="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-500">
+        Reportage · {categoryLabel(data.category)}
+      </figcaption>
+    </figure>
+
+    <div data-animate>
+      <p class="section-index">In evidenza</p>
+
+      <p class="mt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-neutral-400">
+        {categoryLabel(data.category)} · {formatDate(data.pubDate)}
+      </p>
+
+      <h2 class="mt-3 font-display text-[clamp(2rem,4.2vw,3.5rem)] font-semibold leading-[0.95] text-white">
+        {data.title}
+      </h2>
+
+      <p class="mt-5 max-w-xl text-base leading-relaxed text-neutral-400">{data.description}</p>
+
+      {
+        data.highlights.length > 0 && (
+          <div class="mt-8 border-t border-white/10 pt-6">
+            <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-500">
+              Cosa abbiamo trovato
+            </p>
+            <ul class="mt-3 space-y-2">
+              {data.highlights.map((highlight) => (
+                <li class="flex gap-3 text-sm leading-relaxed text-neutral-300">
+                  <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-brand-500" aria-hidden="true" />
+                  <span>{highlight}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      {
+        meta.length > 0 && (
+          <dl class="mt-8 grid grid-cols-2 gap-5 border-t border-white/10 pt-6 sm:grid-cols-4">
+            {meta.map((item) => (
+              <div>
+                <dt class="font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-500">
+                  {item.k}
+                </dt>
+                <dd class="mt-1 text-sm text-white">{item.v}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+
+      <a
+        href={`/blog/${post.id}`}
+        class="mt-9 inline-flex items-center gap-2 rounded-lg bg-brand-500 px-6 py-3 text-sm font-semibold text-night-950 transition hover:bg-brand-400"
+      >
+        Leggi il reportage
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 10h11M10.5 4.5 16 10l-5.5 5.5" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

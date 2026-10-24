@@ -1,11 +1,17 @@
 ---
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import { NAV, SITE } from '../config';
 import logo from '../assets/3mans-tour-logo.png';
 
 const current = Astro.url.pathname;
 const isActive = (href: string) =>
   href === '/' ? current === '/' : current.startsWith(href);
+
+/** Ultimo articolo pubblicato, per il chip "Dal diario". */
+const latest = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+)[0];
 ---
 
 <header class="sticky top-0 z-40 border-b border-white/10 bg-night-950/80 backdrop-blur">
@@ -35,11 +41,28 @@ const isActive = (href: string) =>
     </nav>
 
     <div class="flex items-center gap-2">
+      {
+        latest && (
+          <a
+            href={`/blog/${latest.id}`}
+            class="mr-1 hidden items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 transition hover:border-white/25 xl:flex"
+            aria-label={`Dal diario: ${latest.data.title}`}
+          >
+            <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" aria-hidden="true" />
+            <span class="font-mono text-[9px] uppercase tracking-[0.16em] text-neutral-500">
+              Dal diario
+            </span>
+            <strong class="max-w-[190px] truncate text-xs font-medium text-white">
+              {latest.data.title}
+            </strong>
+          </a>
+        )
+      }
       <a
         href="/contatti"
-        class="hidden rounded-lg bg-brand-500 px-4 py-2 text-sm font-semibold text-night-950 transition hover:bg-brand-400 sm:inline-block"
+        class="hidden items-center gap-1.5 rounded-lg bg-brand-500 px-4 py-2 text-sm font-semibold text-night-950 transition hover:bg-brand-400 sm:inline-flex"
       >
-        Contatti
+        Parliamone
       </a>
       <button
         id="nav-toggle"
@@ -70,7 +93,7 @@ const isActive = (href: string) =>
         ))
       }
       <a href="/contatti" class="mt-2 rounded-lg bg-brand-500 px-3 py-2.5 text-center text-sm font-semibold text-night-950">
-        Contatti
+        Parliamone
       </a>
     </nav>
   </div>

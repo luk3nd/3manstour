@@ -9,6 +9,9 @@ const reducedMotion = () =>
 
 /** Inizializza (o re-inizializza) tutte le animazioni. Sicuro con View Transitions. */
 export function initAnimations(): void {
+  // In sviluppo: ?static=1 disattiva le animazioni (utile per screenshot e controlli).
+  if (import.meta.env.DEV && new URLSearchParams(window.location.search).has('static')) return;
+
   // Pulizia: evita trigger duplicati dopo una navigazione
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 

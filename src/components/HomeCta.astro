@@ -1,0 +1,43 @@
+---
+import { SOCIAL } from '../config';
+
+const instagram = SOCIAL.find((item) => item.label === 'Instagram')?.href ?? 'https://www.instagram.com/';
+---
+
+<section id="contatti-cta" class="container-page py-20 sm:py-28">
+  <div
+    class="grid gap-10 rounded-3xl border border-white/10 bg-night-900/60 p-8 sm:p-14 lg:grid-cols-2 lg:items-end"
+    data-animate
+  >
+    <div>
+      <p class="section-index">07 — Prossima tappa</p>
+      <h2 class="mt-5 font-display text-[clamp(2rem,4.6vw,3.8rem)] font-semibold leading-[0.95] text-white">
+        Il prossimo posto<br />lo scegliamo <em>insieme.</em>
+      </h2>
+      <p class="mt-5 max-w-lg text-base leading-relaxed text-neutral-400">
+        Hai un luogo, una fiera o una struttura che merita un reportage? O vuoi semplicemente
+        scriverci? Raccontacelo: se merita, andiamo a vederlo.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-4 lg:items-end">
+      <a
+        href="/contatti"
+        class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-7 py-3.5 text-sm font-semibold text-night-950 transition hover:bg-brand-400"
+      >
+        Scrivici
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 10h11M10.5 4.5 16 10l-5.5 5.5" />
+        </svg>
+      </a>
+      <a
+        href={instagram}
+        target="_blank"
+        rel="noopener"
+        class="font-mono text-[10px] uppercase tracking-[0.16em] text-neutral-400 transition hover:text-brand-400"
+      >
+        Oppure seguici su Instagram ↗
+      </a>
+    </div>
+  </div>
+</section>

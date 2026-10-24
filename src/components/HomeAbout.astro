@@ -1,0 +1,132 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import SectionHead from './SectionHead.astro';
+import aboutImage from '../assets/about-tremalzo.webp';
+import { CONTACT } from '../config';
+
+interface Props {
+  authors: CollectionEntry<'authors'>[];
+}
+
+const { authors } = Astro.props;
+
+const method = [
+  { n: '01', t: 'Esplorazione sul campo', d: 'Ci andiamo, camminiamo, restiamo il tempo che serve.' },
+  { n: '02', t: 'Incontri e ricerca', d: 'Parliamo con chi il posto lo vive, non solo con chi lo gestisce.' },
+  { n: '03', t: 'Immagini, appunti, racconto', d: 'Restituiamo quello che abbiamo visto, senza brochure.' },
+];
+---
+
+<section id="chi-siamo" class="container-page py-20 sm:py-28">
+  <SectionHead index="01 — Chi siamo">
+    <Fragment slot="title">
+      Tre persone.<br />Nessuna guida.<br /><em>Solo curiosità.</em>
+    </Fragment>
+    <Fragment slot="aside">
+      Siamo Guido, Luca e Stefano. Da Brescia in su, e poi ovunque ci sia qualcosa che non torna nella
+      versione ufficiale.
+    </Fragment>
+  </SectionHead>
+
+  <div class="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:gap-16">
+    <figure data-animate>
+      <div class="overflow-hidden rounded-2xl border border-white/10">
+        <Image
+          src={aboutImage}
+          alt="I tre di 3 Man's Tour davanti al cartello del Tremalzo"
+          widths={[640, 960, 1200]}
+          sizes="(min-width:1024px) 46vw, 100vw"
+          format="webp"
+          class="aspect-[4/3] w-full object-cover"
+        />
+      </div>
+      <figcaption class="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-500">
+        <span class="text-neutral-300">Tremalzo, 16</span> — la prima uscita che ci ha dato un nome.
+      </figcaption>
+    </figure>
+
+    <div data-animate>
+      <p class="text-lg leading-relaxed text-neutral-300">
+        Cerchiamo il lato poco conosciuto delle cose: una fiera di nicchia, un rifugio fuori stagione,
+        una struttura che nessuno fotografa, un pezzo di montagna che resta fuori dalle cartoline. Non
+        andiamo a caccia dell’insolito a tutti i costi. Andiamo a vedere, e poi raccontiamo.
+      </p>
+      <p class="mt-4 text-neutral-400">
+        Niente itinerari perfetti. Solo appunti, immagini e dettagli che aiutano a capire se un posto
+        fa per te.
+      </p>
+
+      <ul class="mt-8 divide-y divide-white/10 border-y border-white/10" aria-label="Il trio">
+        {
+          authors.map((author, i) => (
+            <li class="flex items-baseline gap-4 py-3">
+              <span class="font-mono text-[10px] text-neutral-500">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span class="font-display text-xl font-semibold text-white">{author.data.name}</span>
+              <span class="ml-auto font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">
+                {author.data.role}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-6 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-neutral-500">
+        <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>
+        {CONTACT.location} · dal 2023
+      </p>
+    </div>
+  </div>
+
+  <!-- Il nostro approccio -->
+  <div class="mt-16 grid gap-10 border-t border-white/10 pt-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16" data-animate>
+    <div>
+      <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-500">Il nostro approccio</p>
+      <h3 class="mt-4 font-display text-[clamp(1.9rem,3.4vw,2.75rem)] font-semibold leading-[0.95] text-white">
+        Prima si ascolta.<br />Poi si <em>racconta.</em>
+      </h3>
+      <p class="mt-5 max-w-md text-sm leading-relaxed text-neutral-400">
+        Non arriviamo con una storia già scritta. Ci prendiamo il tempo di capire come funziona un
+        posto, chi lo attraversa e cosa lo rende diverso.
+      </p>
+    </div>
+
+    <ol class="grid gap-6 sm:grid-cols-3">
+      {
+        method.map((step) => (
+          <li>
+            <span class="font-mono text-[10px] text-brand-400">{step.n}</span>
+            <h4 class="mt-3 font-display text-xl font-semibold text-white">{step.t}</h4>
+            <p class="mt-2 text-sm leading-relaxed text-neutral-400">{step.d}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <!-- Manifesto -->
+  <blockquote class="mt-16 border-l-2 border-brand-500 pl-6 sm:pl-10" data-animate>
+    <p class="font-display text-[clamp(1.6rem,3.2vw,2.6rem)] font-semibold leading-[1.05] text-white">
+      “Non cerchiamo l’insolito. Cerchiamo il <em>punto di vista.</em>”
+    </p>
+    <cite class="mt-4 block font-mono text-[10px] uppercase not-italic tracking-[0.16em] text-neutral-500">
+      — il nostro metodo, in una riga
+    </cite>
+    <div class="mt-7 flex flex-wrap items-center gap-5">
+      <a
+        href="/contatti"
+        class="inline-flex items-center gap-2 rounded-lg border border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+      >
+        Parliamone
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 10h11M10.5 4.5 16 10l-5.5 5.5" />
+        </svg>
+      </a>
+      <p class="font-mono text-[10px] uppercase tracking-[0.14em] text-neutral-500">
+        Hai un luogo che merita un reportage?
+      </p>
+    </div>
+  </blockquote>
+</section>

@@ -56,6 +56,15 @@ const blog = defineCollection({
         .default([]),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
+      /**
+       * Scheda del "Reportage scelto" in home — tutti facoltativi.
+       * Se compilati, compaiono nel blocco; se vuoti, il blocco si adatta.
+       */
+      place: z.string().optional(),
+      altitude: z.string().optional(),
+      duration: z.string().optional(),
+      withWhom: z.string().optional(),
+      highlights: z.array(z.string()).default([]),
       /** Domande frequenti specifiche dell'articolo (sezione in fondo + markup FAQPage). */
       faq: z
         .array(
@@ -96,4 +105,20 @@ const pages = defineCollection({
     }),
 });
 
-export const collections = { authors, blog, pages };
+/**
+ * Galleria — una foto per file in src/content/gallery/
+ * Si gestisce dal CMS: aggiungi la foto, scrivi didascalia e ordine.
+ */
+const gallery = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/gallery' }),
+  schema: ({ image }) =>
+    z.object({
+      image: image(),
+      alt: z.string(),
+      caption: z.string().optional(),
+      order: z.number().default(0),
+      draft: z.boolean().default(false),
+    }),
+});
+
+export const collections = { authors, blog, pages, gallery };

@@ -63,3 +63,15 @@ export const CATEGORIES = [
 export function categoryLabel(slug: string): string {
   return CATEGORIES.find((c) => c.slug === slug)?.label ?? slug;
 }
+
+/**
+ * Numeri mostrati in home (sezione "Il conto").
+ * Sono manuali: aggiornali qui e cambia `updated` di conseguenza.
+ */
+export const STATS = {
+  people: 3,
+  places: 17,
+  fairs: 7,
+  km: 3560,
+  updated: 'ottobre 2026',
+};

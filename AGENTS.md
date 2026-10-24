@@ -32,7 +32,12 @@ sito non si aggiorna. Usa **solo** i valori elencati in questo file.
 | `category` | testo | no | `luoghi` | Uno tra: `fiere`, `ristoranti`, `luoghi`, `esperienze` |
 | `tags` | elenco di testo | no | `[]` | **Solo** i tag dell'elenco qui sotto |
 | `draft` | vero/falso | no | `false` | `true` = non pubblicato (non compare da nessuna parte) |
-| `featured` | vero/falso | no | `false` | `true` = in evidenza in home |
+| `featured` | vero/falso | no | `false` | `true` = è il "Reportage scelto" in home (vince il più recente) |
+| `place` | testo | no | — | Scheda del reportage: dove (es. `Passo Crocedomini (BS)`) |
+| `altitude` | testo | no | — | Scheda: quota (es. `1.895 m`) |
+| `duration` | testo | no | — | Scheda: tempo (es. `2 giorni`) |
+| `withWhom` | testo | no | — | Scheda: con chi |
+| `highlights` | elenco di testo | no | `[]` | Scheda: "Cosa abbiamo trovato" (max 3 punti) |
 
 ### Tag ammessi — SOLO questi
 
@@ -144,7 +149,22 @@ faq:
 
 ---
 
-## 5. Regole tecniche da rispettare
+## 5. Galleria della home
+
+- **Percorso:** `src/content/gallery/<slug>.md` + immagine nella stessa cartella
+- **Una foto per file**, come gli articoli.
+- Si gestisce dal CMS, collezione **Galleria**: carichi la foto, scrivi descrizione e
+  didascalia, imposti l'ordine.
+
+| Campo | Obbligatorio | Note |
+|---|---|---|
+| `image` | **sì** | `./nome-file.webp` |
+| `alt` | **sì** | cosa si vede (accessibilità + SEO) |
+| `caption` | no | didascalia mostrata sotto la foto |
+| `order` | no | numero: **più basso = prima** in galleria |
+| `draft` | no | `true` = non appare |
+
+## 6. Regole tecniche da rispettare
 
 - **Immagini:** ridimensionale **prima** di salvarle (lato lungo ~2000 px, JPEG qualità ~80).
   Astro le ottimizza per il sito, ma Git conserva **per sempre** gli originali: file enormi
@@ -158,7 +178,7 @@ faq:
   workflow sono codice: non modificarli per scrivere contenuti. Se serve un cambiamento di
   struttura, chiedilo.
 
-## 6. Pubblicare
+## 7. Pubblicare
 
 Commit e push su `main` → GitHub Actions compila e pubblica automaticamente su Plesk.
 Non serve caricare nulla a mano.

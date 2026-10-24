@@ -2,12 +2,12 @@
 
 /* ==========================================================================
    Design system — arancione su scuro, monocromatico ad alto contrasto
-   Font: Space Grotesk (display) + Inter (corpo) + mono (dettagli)
+   Font: Barlow Condensed (display) + DM Sans (corpo) + JetBrains Mono (dettagli)
    ========================================================================== */
 @theme {
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: "DM Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Arancione brand */
   --color-brand-50: #fff4ec;
@@ -56,8 +56,15 @@
     font-family: var(--font-display);
     color: #fafafa;
     font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    letter-spacing: -0.015em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  /* Nei titoli display, <em> diventa l'accento arancione (vedi mockup) */
+  :is(h1, h2, h3, h4) em {
+    font-style: normal;
+    color: var(--color-brand-500);
   }
 
   a {
@@ -100,9 +107,9 @@
    ========================================================================== */
 .container-page {
   width: 100%;
-  max-width: 76rem;
+  max-width: 80rem;
   margin-inline: auto;
-  padding-inline: 1.5rem;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
 }
 
 .container-narrow {
@@ -120,6 +127,55 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-brand-400);
+}
+
+/* Indice numerato delle sezioni (01 — Chi siamo) */.section-index {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9c988e;
+}
+
+.section-index::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: none;
+  background: var(--color-brand-500);
+}
+
+/* Variante per le sezioni su fondo arancione */
+.section-index--dark {
+  color: rgb(20 18 15 / 0.7);
+}
+
+.section-index--dark::before {
+  background: rgb(20 18 15 / 0.75);
+}
+
+/* Wordmark grande nel footer (testo, non immagine) */
+.wordmark {
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+  margin-bottom: 1.25rem;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 16vw, 15rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  padding-top: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #1c1c1c;
+  user-select: none;
+}
+
+.wordmark span {
+  color: var(--color-brand-500);
 }
 
 /* ==========================================================================
@@ -158,19 +214,19 @@ html.js [data-animate] {
 .prose h2 {
   margin-top: 2.25em;
   margin-bottom: 0.6em;
-  font-size: 1.6rem;
+  font-size: 2rem;
 }
 
 .prose h3 {
   margin-top: 1.8em;
   margin-bottom: 0.5em;
-  font-size: 1.3rem;
+  font-size: 1.55rem;
 }
 
 .prose h4 {
   margin-top: 1.5em;
   margin-bottom: 0.4em;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
 }
 
 /* Le ancore dei titoli non finiscono sotto l'header sticky */
