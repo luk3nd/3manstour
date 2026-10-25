@@ -3340,47 +3340,52 @@ html.js [data-animate] {
 
 
 
-/* Hero dell'articolo: copertina di sfondo con velo, testo centrato */
+/* Hero dell'articolo: testo centrato a sinistra, copertina a filo del bordo destro */
 .article-hero {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
   border-bottom: 1px solid var(--orange);
 }
 
-.article-hero__bg {
-  position: absolute;
-  inset: 0;
+.article-hero__grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr;
 }
 
-.article-hero__bg img {
+.article-hero__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: clamp(32px, 6vw, 56px);
+  padding-inline: var(--gutter);
+}
+
+.article-hero__media {
+  overflow: hidden;
+}
+
+.article-hero__media img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.article-hero__scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to right, rgba(10, 10, 8, 0.95) 0%, rgba(10, 10, 8, 0.78) 45%, rgba(10, 10, 8, 0.4) 100%),
-    linear-gradient(to top, rgba(10, 10, 8, 0.9) 0%, rgba(10, 10, 8, 0) 60%);
-}
-
-.article-hero__text {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-block: 50px;
-}
-
 @media (min-width: 900px) {
-  .article-hero,
+  .article-hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    align-items: stretch;
+    min-height: 50vh;
+    padding-left: max(0px, (100% - var(--container)) / 2);
+  }
+
   .article-hero__text {
+    min-height: 50vh;
+    padding-block: 0;
+    padding-left: var(--gutter);
+    padding-right: 48px;
+  }
+
+  .article-hero__media {
     min-height: 50vh;
   }
 }
