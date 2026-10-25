@@ -1,0 +1,60 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import heroBg from '../assets/hero-paesaggio-notturno-3-mans-tour.jpg';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  eyebrow?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  image?: ImageMetadata;
+}
+
+const {
+  title,
+  subtitle,
+  eyebrow,
+  ctaLabel,
+  ctaHref = '/contatti',
+  image = heroBg,
+} = Astro.props;
+
+const [firstWord, ...restWords] = title.split(' ');
+---
+
+<section class="page-feature">
+  <div class="page-feature__bg" aria-hidden="true">
+    <Image
+      src={image}
+      alt=""
+      widths={[960, 1280, 1920]}
+      sizes="100vw"
+      format="webp"
+      loading="eager"
+      fetchpriority="high"
+      class="h-full w-full object-cover"
+    />
+  </div>
+  <div class="page-feature__scrim" aria-hidden="true"></div>
+  <div class="page-feature__grid" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="container-page page-feature__inner">
+    {eyebrow && <p class="section-index">{eyebrow}</p>}
+    <h1 class="page-feature__title">
+      {firstWord}{restWords.length > 0 && <span> {restWords.join(' ')}</span>}
+    </h1>
+    {subtitle && <p class="page-feature__lead">{subtitle}</p>}
+    {
+      ctaLabel && (
+        <a class="btn btn--orange page-feature__cta" href={ctaHref}>
+          <span>{ctaLabel}</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 4.5 16 10l-5.5 5.5" /></svg>
+        </a>
+      )
+    }
+  </div>
+</section>

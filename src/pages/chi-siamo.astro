@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
+import PageHero from '../components/PageHero.astro';
 import AuthorCard from '../components/AuthorCard.astro';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -46,12 +46,12 @@ const jsonLd = [
   imageAlt="I tre di 3 Man's Tour davanti al cartello del Tremalzo"
   jsonLd={jsonLd}
 >
-  <Hero
-    eyebrow="Il progetto"
+  <PageHero
+    eyebrow="Cosa facciamo e che obiettivo abbiamo"
     title="Il progetto"
     subtitle="Tre amici, una curiosità condivisa e la voglia di raccontare quello che troviamo in giro."
-    compact
-    imageAlt="I tre di 3 Man's Tour davanti al cartello del Tremalzo"
+    ctaLabel="Consigliaci un'avventura"
+    ctaHref="/contatti"
   />
 
   <!-- ================= INTRO ================= -->

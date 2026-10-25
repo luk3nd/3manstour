@@ -3397,3 +3397,84 @@ html.js [data-animate] {
 .page-hero {
   border-bottom: 1px solid var(--orange);
 }
+
+
+/* Hero delle pagine interne (progetto, servizi…) */
+.page-feature {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 78vh;
+  overflow: hidden;
+}
+
+.page-feature__bg {
+  position: absolute;
+  inset: 0;
+}
+
+.page-feature__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.page-feature__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(10, 10, 8, 0.96) 0%,
+    rgba(10, 10, 8, 0.82) 45%,
+    rgba(10, 10, 8, 0.45) 100%
+  );
+}
+
+.page-feature__grid {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.page-feature__inner {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(64px, 9vw, 112px);
+}
+
+.page-feature__title {
+  margin: 18px 0 0;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--orange);
+}
+
+.page-feature__title span {
+  color: var(--paper);
+}
+
+.page-feature__lead {
+  margin-top: 22px;
+  max-width: 520px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: #b9b4a8;
+}
+
+.page-feature__cta {
+  margin-top: 34px;
+}
+
+@media (min-width: 900px) {
+  .page-feature__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: min(var(--container), 100% - 2 * var(--gutter));
+    margin-inline: auto;
+  }
+
+  .page-feature__grid span {
+    border-left: 1px solid rgba(243, 240, 232, 0.07);
+  }
+}
