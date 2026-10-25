@@ -3254,3 +3254,23 @@ html.js [data-animate] {
     gap: 48px;
   }
 }
+
+
+/* --- Minimo leggibile: 16px per il testo che va letto --- */
+.btn,
+.text-link,
+.tag-chip,
+.post-card__meta,
+.post-card__excerpt,
+.post-card__cta,
+.post-card__more {
+  font-size: 16px;
+}
+
+.text-link {
+  letter-spacing: 0.04em;
+}
+
+.btn {
+  letter-spacing: 0.02em;
+}

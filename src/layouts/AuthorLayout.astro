@@ -76,7 +76,7 @@ const socialItems = socialEntries.map(([key, href]) => ({
   <section class="container-page py-16">
     <div class="flex items-end justify-between gap-4">
       <h2 class="text-2xl font-semibold text-white">Articoli di {name}</h2>
-      <span class="font-mono text-sm text-neutral-500">{posts.length} {posts.length === 1 ? 'articolo' : 'articoli'}</span>
+      <span class="text-base text-neutral-400">{posts.length} {posts.length === 1 ? 'articolo' : 'articoli'}</span>
     </div>
     {
       posts.length > 0 ? (
