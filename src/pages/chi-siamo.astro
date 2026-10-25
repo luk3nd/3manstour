@@ -183,68 +183,38 @@ const jsonLd = [
     </div>
   </section>
 
-  <!-- ================= DOVE SIAMO ================= -->
-  <section class="container-page py-20 sm:py-28">
-    <div
-      class="relative overflow-hidden border border-white/10 bg-gradient-to-br from-night-800 to-night-900 px-8 py-16 text-center sm:px-16"
-     
-    >
-      <div class="absolute -right-20 -top-20 h-64 w-64 bg-brand-500/20 blur-3xl"></div>
-      <p class="eyebrow relative">Dove siamo</p>
-      <h2 class="page-title-lg relative mt-4 text-white">
-        Partiamo da {CONTACT.location}
-      </h2>
-      <p class="relative mx-auto mt-4 max-w-xl text-neutral-400">
-        Hai un posto, un evento o una storia da segnalarci? Scrivici: se merita davvero, andiamo a
-        vederlo e lo raccontiamo.
-      </p>
-      <div class="relative mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a
-          href="/contatti"
-          class=" bg-brand-500 px-6 py-3 text-sm font-semibold text-night-950 transition hover:bg-brand-400"
-        >
-          Contattaci
-        </a>
-        <a
-          href={SOCIAL.find((s) => s.label === 'Instagram')?.href ?? '#'}
-          target="_blank"
-          rel="noopener"
-          class=" border border-white/20 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-        >
-          Seguici su Instagram
-        </a>
+  <!-- ================= CTA ================= -->
+  <section class="cta" id="contatti">
+    <div class="container cta__grid">
+      <div class="cta__copy">
+        <p class="section-index section-index--dark">Prossima tappa</p>
+        <h2>Il prossimo posto<br />lo scegliamo <em>insieme.</em></h2>
+        <p class="cta__lead">
+          Partiamo da Brescia, Italia. Hai un posto, un evento o una storia da segnalarci? Scrivici:
+          se merita davvero, andiamo a vederlo e lo raccontiamo.
+        </p>
+        <p class="cta__alt">
+          Preferisci scrivere una mail? <a href="mailto:info@3manstour.com?subject=Una%20storia%20da%20raccontare">Scrivici <span aria-hidden="true">↗</span></a>
+        </p>
+      </div>
+
+      <div class="cta__form-wrap">
+        <div class="cta__form">
+          <a class="btn btn--dark cta__submit" href="/contatti">
+            <span>Raccontaci un posto</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 4.5 16 10l-5.5 5.5" /></svg>
+          </a>
+          <a
+            class="btn btn--ghost cta__submit"
+            href="https://www.instagram.com/3m.ontour/"
+            target="_blank"
+            rel="noopener"
+          >
+            <span>Seguici su Instagram</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M7 5h8v8" /></svg>
+          </a>
+        </div>
       </div>
     </div>
   </section>
-
-  <script>
-    const root = document.querySelector('[data-dove]');
-    if (root) {
-      const items = Array.from(root.querySelectorAll<HTMLElement>('[data-dove-index]'));
-      const images = Array.from(root.querySelectorAll<HTMLElement>('[data-dove-image]'));
-      const activate = (index: number) => {
-        images.forEach((img) => {
-          const active = Number(img.dataset.doveImage) === index;
-          img.classList.toggle('opacity-100', active);
-          img.classList.toggle('opacity-0', !active);
-        });
-        items.forEach((item) => {
-          const active = Number(item.dataset.doveIndex) === index;
-          item.setAttribute('aria-pressed', String(active));
-          const h3 = item.querySelector('h3');
-          const p = item.querySelector('p');
-          h3?.classList.toggle('text-white', active);
-          h3?.classList.toggle('text-neutral-500', !active);
-          p?.classList.toggle('text-neutral-300', active);
-          p?.classList.toggle('text-neutral-500', !active);
-        });
-      };
-      items.forEach((item) => {
-        const index = Number(item.dataset.doveIndex);
-        item.addEventListener('mouseenter', () => activate(index));
-        item.addEventListener('focus', () => activate(index));
-        item.addEventListener('click', () => activate(index));
-      });
-    }
-  </script>
 </BaseLayout>
