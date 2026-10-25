@@ -3338,55 +3338,50 @@ html.js [data-animate] {
 }
 
 
-/* Hero dell'articolo: testo a sinistra, copertina a destra, riga arancione sotto */
+
+
+/* Hero dell'articolo: testo a sinistra, copertina a filo del bordo destro */
 .article-hero {
   border-bottom: 1px solid var(--orange);
 }
 
 .article-hero__grid {
   display: grid;
-  gap: 28px;
-  padding: 28px 0 30px;
+  gap: 0;
+}
+
+.article-hero__text {
+  padding-block: 28px;
+  padding-inline: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
 }
 
 .article-hero__media {
-  border: 0;
   overflow: hidden;
+  min-height: 40vh;
 }
 
 .article-hero__media img {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  height: 100%;
   object-fit: cover;
 }
 
 @media (min-width: 900px) {
   .article-hero__grid {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: 44px;
-    padding: 40px 0 44px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+    align-items: stretch;
+    min-height: 50vh;
   }
 
-  .article-hero__grid {
-    align-items: stretch;
+  .article-hero__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 40px;
+    padding-right: 48px;
   }
 
   .article-hero__media {
-    height: 50vh;
-    align-self: stretch;
+    min-height: 0;
   }
-
-  .article-hero__media img {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: auto;
-    object-fit: cover;
-  }
-}
-
-/* Categoria: stessa misura dei tag */
-.chip-cat {
-  font-size: 14px;
-  padding: 3px 9px;
-  letter-spacing: 0.04em;
 }
