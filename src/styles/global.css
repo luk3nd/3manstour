@@ -3304,3 +3304,35 @@ html.js [data-animate] {
     padding: 0;
   }
 }
+
+
+/* Titoli della sidebar articolo */
+.sidebar-title {
+  font-size: 20px;
+  line-height: 1.1;
+  font-weight: 600;
+  color: var(--paper);
+  margin-bottom: 10px;
+}
+
+.sidebar-post-title {
+  font-size: 30px;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--paper);
+}
+
+/* Categoria dell'articolo: come i tag, ma arancione */
+.chip-cat {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--orange);
+  background: rgba(255, 78, 0, 0.12);
+  color: var(--orange);
+  padding: 4px 10px;
+  font-family: var(--mono);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
