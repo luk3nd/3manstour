@@ -3404,7 +3404,7 @@ html.js [data-animate] {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 78vh;
+  min-height: 50vh;
   overflow: hidden;
 }
 
