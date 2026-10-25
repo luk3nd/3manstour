@@ -28,50 +28,49 @@ const {
 {
   split && image ? (
     <section class="article-hero">
-      <div class="container-page">
-        <div class="article-hero__grid">
-          <div>
-            {breadcrumb && breadcrumb.length > 0 && (
-              <nav aria-label="Percorso" class="mb-6">
-                <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  {breadcrumb.map((item, i) => (
-                    <li class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
-                      {i > 0 && <span aria-hidden="true" class="text-neutral-600">/</span>}
-                      {item.url ? (
-                        <a href={item.url} class="text-neutral-400 transition hover:text-brand-400">
-                          {item.name}
-                        </a>
-                      ) : (
-                        <span class="text-neutral-300">{item.name}</span>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              </nav>
-            )}
+      <div class="article-hero__bg" aria-hidden="true">
+        <Image
+          src={image}
+          alt=""
+          widths={[960, 1280, 1920]}
+          sizes="100vw"
+          format="webp"
+          loading="eager"
+          fetchpriority="high"
+          class="h-full w-full object-cover"
+        />
+      </div>
+      <div class="article-hero__scrim" aria-hidden="true"></div>
 
-            {eyebrow && <p class="section-index">{eyebrow}</p>}
+      <div class="article-hero__text container-page">
+        {breadcrumb && breadcrumb.length > 0 && (
+          <nav aria-label="Percorso" class="mb-6">
+            <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+              {breadcrumb.map((item, i) => (
+                <li class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
+                  {i > 0 && <span aria-hidden="true" class="text-neutral-600">/</span>}
+                  {item.url ? (
+                    <a href={item.url} class="text-neutral-400 transition hover:text-brand-400">
+                      {item.name}
+                    </a>
+                  ) : (
+                    <span class="text-neutral-300">{item.name}</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
 
-            <h1 class="page-title mt-3">{title}</h1>
+        {eyebrow && <p class="section-index">{eyebrow}</p>}
 
-            {subtitle && (
-              <p class="mt-4 max-w-2xl text-lg leading-relaxed text-neutral-400">{subtitle}</p>
-            )}
+        <h1 class="page-title mt-3">{title}</h1>
 
-            <slot />
-          </div>
+        {subtitle && (
+          <p class="mt-4 max-w-2xl text-lg leading-relaxed text-neutral-300">{subtitle}</p>
+        )}
 
-          <div class="article-hero__media">
-            <Image
-              src={image}
-              alt={imageAlt}
-              widths={[640, 960, 1280]}
-              sizes="(min-width: 900px) 44vw, 100vw"
-              format="webp"
-              class="h-full w-full object-cover"
-            />
-          </div>
-        </div>
+        <slot />
       </div>
     </section>
   ) : (
