@@ -3379,6 +3379,7 @@ html.js [data-animate] {
   }
 
   .article-hero__text {
+    min-height: 50vh;
     padding-block: 0;
     padding-left: var(--gutter);
     padding-right: 48px;
