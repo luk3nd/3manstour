@@ -3274,3 +3274,33 @@ html.js [data-animate] {
 .btn {
   letter-spacing: 0.02em;
 }
+
+
+/* --- Archivio: una colonna, divisori, immagine più larga --- */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-list > * + * {
+  border-top: 1px solid var(--line);
+  margin-top: 28px;
+  padding-top: 28px;
+}
+
+@media (min-width: 900px) {
+  .blog-list .post-card--small .post-card__link {
+    display: grid;
+    grid-template-columns: minmax(0, 0.44fr) minmax(0, 1fr);
+    gap: 32px;
+    align-items: center;
+  }
+
+  .blog-list .post-card--small .post-card__media {
+    aspect-ratio: 16 / 10;
+  }
+
+  .blog-list .post-card--small .post-card__body {
+    padding: 0;
+  }
+}
