@@ -3350,7 +3350,7 @@ html.js [data-animate] {
 }
 
 .article-hero__media {
-  border: 1px solid var(--line);
+  border: 0;
   overflow: hidden;
 }
 
@@ -3364,12 +3364,23 @@ html.js [data-animate] {
   .article-hero__grid {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     gap: 44px;
-    align-items: center;
     padding: 40px 0 44px;
   }
 
+  .article-hero__grid {
+    align-items: stretch;
+  }
+
+  .article-hero__media {
+    height: 50vh;
+    align-self: stretch;
+  }
+
   .article-hero__media img {
-    aspect-ratio: 4 / 3;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
   }
 }
 
