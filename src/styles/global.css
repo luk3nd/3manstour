@@ -3391,3 +3391,9 @@ html.js [data-animate] {
     min-height: 50vh;
   }
 }
+
+
+/* Hero compatta delle pagine interne */
+.page-hero {
+  border-bottom: 1px solid var(--orange);
+}

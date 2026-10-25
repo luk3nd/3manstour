@@ -11,6 +11,7 @@ interface Props {
   align?: 'center' | 'left';
   breadcrumb?: { name: string; url?: string }[];
   split?: boolean;
+  compact?: boolean;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   align = 'left',
   breadcrumb,
   split = false,
+  compact = false,
 } = Astro.props;
 ---
 
@@ -74,7 +76,7 @@ const {
       </div>
     </section>
   ) : (
-    <section class="relative overflow-hidden">
+    <section class:list={['relative overflow-hidden', compact && 'page-hero']}>
       {image && (
         <div class="absolute inset-0">
           <Image
