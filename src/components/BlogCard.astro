@@ -15,6 +15,7 @@ const { title, description, pubDate, cover, coverAlt, tags, category } = post.da
 
 <article
   class:list={['post-card', large ? 'post-card--large' : 'post-card--small']}
+  data-post-card
   data-tags={(tags ?? []).map((tag) => slugify(tag)).join(',')}
 >
   <a class="post-card__link" href={`/blog/${post.id}`}>
@@ -34,19 +35,20 @@ const { title, description, pubDate, cover, coverAlt, tags, category } = post.da
       <span class="post-card__meta">{formatDate(pubDate)}</span>
       <span class="post-card__title">{title}</span>
       {large && description && <span class="post-card__excerpt">{description}</span>}
-      <span class="post-card__cta">Leggi <span aria-hidden="true">↗</span></span>
+
+      {
+        tags && tags.length > 0 && (
+          <span class="post-card__tags">
+            {tags.map((tag) => (
+              <span class="tag-chip">#{tag}</span>
+            ))}
+          </span>
+        )
+      }
+
+      <span class="btn btn--orange btn--small post-card__more">
+        Leggi <span aria-hidden="true">↗</span>
+      </span>
     </span>
   </a>
-
-  {
-    tags && tags.length > 0 && (
-      <div class="post-card__tags">
-        {tags.map((tag) => (
-          <a class="tag-chip" href={`/blog/tag/${slugify(tag)}`}>
-            #{tag}
-          </a>
-        ))}
-      </div>
-    )
-  }
 </article>

@@ -23,7 +23,7 @@ const countFor = (id: string) => posts.filter((p) => p.data.author.id === id).le
     <div class="flex flex-col gap-12">
       {
         authors.map((author, i) => (
-          <article class="about__grid border-t border-white/10 pt-10">
+          <article class="author-row border-t border-white/10 pt-10">
             <figure class="about__media">
               <a href={`/autori/${author.id}`} aria-label={author.data.name}>
                 <Image

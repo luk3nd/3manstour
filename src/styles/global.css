@@ -3188,3 +3188,69 @@ html.js [data-animate] {
     justify-content: flex-end;
   }
 }
+
+
+/* --- Rifiniture richieste --- */
+
+/* Tag dentro la card, sopra il pulsante */
+.post-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.post-card__cat {
+  font-size: 16px;
+  padding: 6px 10px;
+}
+
+.post-card__meta {
+  font-size: 14px;
+}
+
+.post-card__excerpt {
+  font-size: 16px;
+  max-width: 62ch;
+}
+
+.post-card__more {
+  align-self: flex-start;
+  margin-top: 6px;
+  font-size: 16px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.post-card--large .post-card__body {
+  justify-content: center;
+}
+
+.tag-chip {
+  font-size: 14px;
+}
+
+[data-filter-empty],
+[data-filter-link] {
+  font-size: 16px;
+}
+
+/* Schede autore compatte: foto quadrata a metà */
+.author-row {
+  display: grid;
+  gap: 28px;
+  align-items: start;
+}
+
+.author-row img {
+  aspect-ratio: 1;
+  width: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 800px) {
+  .author-row {
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 48px;
+  }
+}
