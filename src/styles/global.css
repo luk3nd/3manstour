@@ -2913,8 +2913,8 @@ h3 {
 
 /* Titoli delle pagine interne: la scala del mockup è pensata per la hero */
 .page-title {
-  font-size: clamp(2.6rem, 5.2vw, 4.6rem);
-  line-height: 0.92;
+  font-size: clamp(2.1rem, 3.6vw, 3.2rem);
+  line-height: 0.98;
   letter-spacing: -0.02em;
 }
 

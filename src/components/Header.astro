@@ -27,7 +27,7 @@ const latest = (await getCollection('blog', ({ data }) => !data.draft)).sort(
           <a
             href={item.href}
             class:list={[
-              'rounded-lg px-3 py-2 text-sm font-medium transition',
+              ' px-3 py-2 text-sm font-medium transition',
               isActive(item.href)
                 ? 'text-brand-400'
                 : 'text-neutral-400 hover:bg-white/5 hover:text-white',
@@ -84,7 +84,7 @@ const latest = (await getCollection('blog', ({ data }) => !data.draft)).sort(
           <a
             href={item.href}
             class:list={[
-              'rounded-lg px-3 py-2.5 text-sm font-medium',
+              ' px-3 py-2.5 text-sm font-medium',
               isActive(item.href) ? 'text-brand-400' : 'text-neutral-400',
             ]}
           >

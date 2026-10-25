@@ -34,7 +34,7 @@ const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
           </svg>
         </summary>
         <nav class="mt-4" aria-label="Indice dell'articolo">
-          <ol class="space-y-2 border-l border-white/10 pl-4 text-sm">
+          <ol class="space-y-2 border-l border-white/10 pl-6 text-sm">
             {items.map((h) => (
               <li class={h.depth === 3 ? 'pl-4' : ''}>
                 <a href={`#${h.slug}`} class="text-neutral-400 transition hover:text-brand-400">
@@ -49,7 +49,7 @@ const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
       {/* Desktop: colonna sinistra, segue lo scorrimento */}
       <nav class="hidden xl:block" aria-label="Indice dell'articolo">
         <p class="eyebrow">Indice</p>
-        <ol class="mt-4 space-y-2 border-l border-white/10 pl-4 text-sm">
+        <ol class="mt-4 space-y-2 border-l border-white/10 pl-6 text-sm">
           {items.map((h) => (
             <li class={h.depth === 3 ? 'pl-4' : ''}>
               <a

@@ -10,7 +10,7 @@ const { currentPage, lastPage, basePath = '/blog' } = Astro.props;
 const urlFor = (page: number) => (page === 1 ? `${basePath}` : `${basePath}/${page}`);
 const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
 const linkBase =
-  'inline-flex h-10 min-w-10 items-center justify-center rounded-lg border px-3 text-sm font-medium transition';
+  'inline-flex h-10 min-w-10 items-center justify-center  border px-3 text-sm font-medium transition';
 ---
 
 {
