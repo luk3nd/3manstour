@@ -10,74 +10,131 @@ interface Props {
   imageAlt?: string;
   align?: 'center' | 'left';
   breadcrumb?: { name: string; url?: string }[];
+  split?: boolean;
 }
 
-const { title, subtitle, eyebrow, image, imageAlt = '', align = 'left', breadcrumb } = Astro.props;
+const {
+  title,
+  subtitle,
+  eyebrow,
+  image,
+  imageAlt = '',
+  align = 'left',
+  breadcrumb,
+  split = false,
+} = Astro.props;
 ---
 
-<section class="relative overflow-hidden">
-  {
-    image && (
-      <div class="absolute inset-0">
-        <Image
-          src={image}
-          alt={imageAlt}
-          widths={[640, 960, 1280, 1920]}
-          sizes="100vw"
-          format="webp"
-          quality={70}
-          class="h-full w-full object-cover opacity-35"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-night-950 via-night-950/75 to-night-950/55" />
+{
+  split && image ? (
+    <section class="article-hero">
+      <div class="container-page">
+        <div class="article-hero__grid">
+          <div>
+            {breadcrumb && breadcrumb.length > 0 && (
+              <nav aria-label="Percorso" class="mb-6">
+                <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  {breadcrumb.map((item, i) => (
+                    <li class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
+                      {i > 0 && <span aria-hidden="true" class="text-neutral-600">/</span>}
+                      {item.url ? (
+                        <a href={item.url} class="text-neutral-400 transition hover:text-brand-400">
+                          {item.name}
+                        </a>
+                      ) : (
+                        <span class="text-neutral-300">{item.name}</span>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )}
+
+            {eyebrow && <p class="section-index">{eyebrow}</p>}
+
+            <h1 class="page-title mt-3">{title}</h1>
+
+            {subtitle && (
+              <p class="mt-4 max-w-2xl text-lg leading-relaxed text-neutral-400">{subtitle}</p>
+            )}
+
+            <slot />
+          </div>
+
+          <div class="article-hero__media">
+            <Image
+              src={image}
+              alt={imageAlt}
+              widths={[640, 960, 1280]}
+              sizes="(min-width: 900px) 44vw, 100vw"
+              format="webp"
+              class="h-full w-full object-cover"
+            />
+          </div>
+        </div>
       </div>
-    )
-  }
+    </section>
+  ) : (
+    <section class="relative overflow-hidden">
+      {image && (
+        <div class="absolute inset-0">
+          <Image
+            src={image}
+            alt={imageAlt}
+            widths={[640, 960, 1280, 1920]}
+            sizes="100vw"
+            format="webp"
+            quality={70}
+            class="h-full w-full object-cover opacity-35"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-night-950 via-night-950/75 to-night-950/55" />
+        </div>
+      )}
 
-  <div class="container-page relative py-16 sm:py-20">
-    {
-      breadcrumb && breadcrumb.length > 0 && (
-        <nav aria-label="Percorso" class="mb-6">
-          <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
-            {breadcrumb.map((item, i) => (
-              <li class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
-                {i > 0 && (
-                  <span aria-hidden="true" class="text-neutral-600">
-                    /
-                  </span>
-                )}
-                {item.url ? (
-                  <a href={item.url} class="text-neutral-400 transition hover:text-brand-400">
-                    {item.name}
-                  </a>
-                ) : (
-                  <span class="text-neutral-300">{item.name}</span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
-      )
-    }
+      <div class="container-page relative py-16 sm:py-20">
+        {breadcrumb && breadcrumb.length > 0 && (
+          <nav aria-label="Percorso" class="mb-6">
+            <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+              {breadcrumb.map((item, i) => (
+                <li class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
+                  {i > 0 && <span aria-hidden="true" class="text-neutral-600">/</span>}
+                  {item.url ? (
+                    <a href={item.url} class="text-neutral-400 transition hover:text-brand-400">
+                      {item.name}
+                    </a>
+                  ) : (
+                    <span class="text-neutral-300">{item.name}</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
 
-    {eyebrow && <p class="section-index">{eyebrow}</p>}
+        {eyebrow && <p class="section-index">{eyebrow}</p>}
 
-    <h1 class:list={['page-title mt-4', align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-4xl']}>
-      {title}
-    </h1>
-
-    {
-      subtitle && (
-        <p
+        <h1
           class:list={[
-            'mt-5 max-w-2xl text-lg leading-relaxed text-neutral-400',
-            align === 'center' && 'mx-auto text-center',
+            'page-title mt-4',
+            align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-4xl',
           ]}
         >
-          {subtitle}
-        </p>
-      )
-    }
+          {title}
+        </h1>
 
-    <slot />
-  </div>
-</section>
+        {subtitle && (
+          <p
+            class:list={[
+              'mt-5 max-w-2xl text-lg leading-relaxed text-neutral-400',
+              align === 'center' && 'mx-auto text-center',
+            ]}
+          >
+            {subtitle}
+          </p>
+        )}
+
+        <slot />
+      </div>
+    </section>
+  )
+}

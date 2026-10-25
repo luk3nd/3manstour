@@ -3336,3 +3336,46 @@ html.js [data-animate] {
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+
+
+/* Hero dell'articolo: testo a sinistra, copertina a destra, riga arancione sotto */
+.article-hero {
+  border-bottom: 1px solid var(--orange);
+}
+
+.article-hero__grid {
+  display: grid;
+  gap: 28px;
+  padding: 28px 0 30px;
+}
+
+.article-hero__media {
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.article-hero__media img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+@media (min-width: 900px) {
+  .article-hero__grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 44px;
+    align-items: center;
+    padding: 40px 0 44px;
+  }
+
+  .article-hero__media img {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Categoria: stessa misura dei tag */
+.chip-cat {
+  font-size: 14px;
+  padding: 3px 9px;
+  letter-spacing: 0.04em;
+}
