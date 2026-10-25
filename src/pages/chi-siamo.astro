@@ -55,44 +55,52 @@ const jsonLd = [
   />
 
   <!-- ================= INTRO ================= -->
-  <section class="container-narrow py-14 sm:py-20">
-    <div class="prose" data-animate>
-      <p>
-        Non vogliamo fare l’ennesima lista di posti da spuntare. Ci interessa capire cosa rende
-        speciale un’esperienza, viverla in prima persona e condividerla con uno sguardo curioso e
-        sincero.
-      </p>
-      <p>
-        Per questo visitiamo fiere, ristoranti, luoghi ed esperienze e poi raccogliamo impressioni,
-        dettagli e storie in articoli e video: senza fingere che ogni scoperta debba piacere a tutti.
-      </p>
+  <section class="section about">
+    <div class="container">
+      <div class="about__grid">
+        <figure class="about__media" data-animate>
+          <Image
+            src={storiaImg}
+            alt="I tre di 3 Man's Tour davanti al cartello del Tremalzo"
+            widths={[640, 960, 1200]}
+            sizes="(min-width: 900px) 52vw, 100vw"
+            format="webp"
+            class="h-full w-full object-cover"
+          />
+          <figcaption><span>Tremalzo, 16</span> — la prima uscita che ci ha dato un nome.</figcaption>
+        </figure>
+
+        <div class="about__copy">
+          <p class="about__intro" data-animate>
+            Non vogliamo fare l’ennesima lista di posti da spuntare. Ci interessa capire cosa rende
+            speciale un’esperienza, viverla in prima persona e condividerla con uno sguardo curioso
+            e sincero.
+          </p>
+          <p class="about__text" data-animate>
+            Per questo visitiamo fiere, ristoranti, luoghi ed esperienze e poi raccogliamo
+            impressioni, dettagli e storie in articoli e video: senza fingere che ogni scoperta
+            debba piacere a tutti.
+          </p>
+
+          <ul class="team" data-animate aria-label="Il trio">
+            {authors.map((author, i) => (
+              <li>
+                <span class="team__num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="team__name">{author.data.name}</span>
+                <span class="team__role">{author.data.role}</span>
+              </li>
+            ))}
+          </ul>
+
+          <p class="about__place" data-animate>
+            <span class="dot" aria-hidden="true"></span>Brescia, Italia · dal 2023
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ================= TEAM ================= -->
-  <section data-reveal class="border-t border-white/10 bg-night-900/50 py-20 sm:py-28">
-    <div class="container-page">
-      <div class="mx-auto max-w-2xl text-center" data-animate>
-        <p class="eyebrow">Chi siamo</p>
-        <h2 class="page-title-lg mt-4 text-white">
-          Tre sguardi diversi
-        </h2>
-        <p class="mt-4 text-neutral-400">
-          Video, ricerca e fotografia: ognuno porta una parte diversa del racconto.
-        </p>
-      </div>
-
-      <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {authors.map((author) => (
-          <div data-animate>
-            <AuthorCard author={author} count={countFor(author.id)} />
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= STORIA E NOME ================= -->
+  <!-- ================= STORIA E NOME =================
   <section data-reveal class="border-t border-white/10 py-20 sm:py-28">
     <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
       <div class="relative aspect-[4/3] overflow-hidden border border-white/10" data-animate>
@@ -133,69 +141,49 @@ const jsonLd = [
   </section>
 
   <!-- ================= METODO ================= -->
-  <section data-reveal class="border-t border-white/10 bg-night-900/50 py-20 sm:py-28">
-    <div class="container-page">
-      <div class="mx-auto max-w-2xl text-center" data-animate>
-        <p class="eyebrow">Il nostro metodo</p>
-        <h2 class="page-title-lg mt-4 text-white">
-          Prima ci incuriosisce. Poi ci andiamo.
-        </h2>
+  <section class="section">
+    <div class="container">
+      <div class="method" data-animate>
+        <div class="method__head">
+          <p class="micro">Il nostro approccio</p>
+          <h3>Prima si ascolta.<br />Poi si <em>racconta.</em></h3>
+          <p class="method__lead">
+            Non arriviamo con una storia già scritta. Ci prendiamo il tempo di capire come funziona
+            un posto, chi lo attraversa e cosa lo rende diverso.
+          </p>
+        </div>
+        <ol class="method__steps">
+          <li>
+            <span>01</span><strong>Esplorazione sul campo</strong>
+            <p>Ci andiamo, camminiamo, restiamo il tempo che serve.</p>
+          </li>
+          <li>
+            <span>02</span><strong>Incontri e ricerca</strong>
+            <p>Parliamo con chi il posto lo vive, non solo con chi lo gestisce.</p>
+          </li>
+          <li>
+            <span>03</span><strong>Immagini, appunti, racconto</strong>
+            <p>Restituiamo quello che abbiamo visto, senza brochure.</p>
+          </li>
+        </ol>
       </div>
 
-      <div class="mt-12 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-14" data-dove>
-        <div class="order-2 flex flex-col divide-y divide-white/10 border-y border-white/10 lg:order-1">
-          {
-            metodo.map((item, i) => (
-              <button
-                type="button"
-                class="dove-item group flex items-start gap-4 py-6 text-left"
-                data-dove-index={i}
-                aria-pressed={i === 0 ? 'true' : 'false'}
-              >
-                <span class="pt-1.5 font-mono text-xs text-neutral-500">0{i + 1}</span>
-                <span class="flex-1">
-                  <h3
-                    class:list={[
-                      'font-display text-xl font-semibold transition sm:text-2xl',
-                      i === 0 ? 'text-white' : 'text-neutral-500 group-hover:text-white',
-                    ]}
-                  >
-                    {item.n}
-                  </h3>
-                  <p
-                    class:list={[
-                      'mt-2 text-sm leading-relaxed transition',
-                      i === 0 ? 'text-neutral-300' : 'text-neutral-500 group-hover:text-neutral-300',
-                    ]}
-                  >
-                    {item.d}
-                  </p>
-                </span>
-              </button>
-            ))
-          }
+      <blockquote class="manifesto" data-animate>
+        <span class="manifesto__mark" aria-hidden="true">✳</span>
+        <p>“Non cerchiamo l’insolito. Cerchiamo il <em>punto di vista.</em>”</p>
+        <cite>— il nostro metodo, in una riga</cite>
+        <div class="manifesto__actions">
+          <a class="btn btn--ghost" href="/contatti">
+            <span>Parliamone</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 4.5 16 10l-5.5 5.5" /></svg>
+          </a>
+          <p class="micro">Hai un luogo che merita un reportage?</p>
         </div>
-
-        <div class="relative order-1 aspect-[4/3] overflow-hidden border border-white/10 bg-night-900 lg:order-2 lg:aspect-auto lg:h-[540px]">
-          {
-            metodo.map((item, i) => (
-              <Image
-                src={item.img}
-                alt={item.n}
-                widths={[640, 960, 1280]}
-                sizes="(min-width:1024px) 50vw, 100vw"
-                format="webp"
-                class={`dove-image absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${i === 0 ? 'opacity-100' : 'opacity-0'}`}
-                data-dove-image={i}
-              />
-            ))
-          }
-        </div>
-      </div>
+      </blockquote>
     </div>
   </section>
 
-  <!-- ================= DOVE SIAMO + CTA ================= -->
+  <!-- ================= DOVE ================= --> ================= -->
   <section data-reveal class="container-page py-20 sm:py-28">
     <div
       class="relative overflow-hidden border border-white/10 bg-gradient-to-br from-night-800 to-night-900 px-8 py-16 text-center sm:px-16"
