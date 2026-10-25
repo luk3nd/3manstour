@@ -7,7 +7,6 @@ import { CATEGORIES, SITE, STATS, categoryLabel } from '../config';
 import { organization } from '../lib/schema';
 import { formatDate } from '../lib/utils';
 
-import '../styles/home.css';
 
 // --- Hero: usa il primo file "hero-*" in src/assets, altrimenti la foto storica.
 const heroModules = import.meta.glob<{ default: ImageMetadata }>('../assets/hero-*.{jpg,jpeg,png,webp}', {
@@ -94,7 +93,7 @@ const jsonLd = [
 ---
 
 <BaseLayout jsonLd={jsonLd}>
-  <div class="home-scope">
+  <div class="home">
     <!-- ================= HERO ================= -->
     <section class="hero" id="top" aria-labelledby="hero-title">
       <Image
@@ -601,11 +600,16 @@ const jsonLd = [
               <span>Raccontaci un posto</span>
               <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 4.5 16 10l-5.5 5.5" /></svg>
             </a>
-            <p class="cta__note">Ti rispondiamo noi, non un modulo automatico.</p>
+            <a
+              class="btn btn--ghost cta__submit"
+              href="https://www.instagram.com/3m.ontour/"
+              target="_blank"
+              rel="noopener"
+            >
+              <span>Seguici su Instagram</span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M7 5h8v8" /></svg>
+            </a>
           </div>
-          <p class="cta__social">
-            Oppure <a href="https://www.instagram.com/3m.ontour/" target="_blank" rel="noopener">seguici su Instagram ↗</a>
-          </p>
         </div>
       </div>
     </section>
@@ -636,7 +640,7 @@ const jsonLd = [
     typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('static');
 
   function initHome() {
-    const scope = document.querySelector<HTMLElement>('.home-scope');
+    const scope = document.querySelector<HTMLElement>('.home');
     if (!scope) return;
 
     // --- Reveal

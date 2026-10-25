@@ -9,25 +9,13 @@ interface Props {
   image?: ImageMetadata;
   imageAlt?: string;
   align?: 'center' | 'left';
-  minHeight?: string;
   breadcrumb?: { name: string; url?: string }[];
 }
 
-const {
-  title,
-  subtitle,
-  eyebrow,
-  image,
-  imageAlt = '',
-  align = 'center',
-  minHeight = 'py-24 sm:py-32',
-  breadcrumb,
-} = Astro.props;
-
-const alignment = align === 'center' ? 'items-center text-center' : 'items-start text-left';
+const { title, subtitle, eyebrow, image, imageAlt = '', align = 'left', breadcrumb } = Astro.props;
 ---
 
-<section class="relative overflow-hidden bg-night-950">
+<section class="relative overflow-hidden">
   {
     image && (
       <div class="absolute inset-0">
@@ -45,41 +33,51 @@ const alignment = align === 'center' ? 'items-center text-center' : 'items-start
     )
   }
 
-  <div class:list={['container-page relative flex flex-col', minHeight, alignment]}>
-    <div class:list={['max-w-3xl', align === 'center' && 'mx-auto']}>
-      {
-        breadcrumb && breadcrumb.length > 0 && (
-          <nav aria-label="Percorso" class="mb-5">
-            <ol
-              class:list={[
-                'flex flex-wrap items-center gap-x-2 gap-y-1 text-xs',
-                align === 'center' && 'justify-center',
-              ]}
-            >
-              {breadcrumb.map((item, i) => (
-                <li class="flex items-center gap-2">
-                  {i > 0 && (
-                    <span aria-hidden="true" class="text-neutral-600">
-                      /
-                    </span>
-                  )}
-                  {item.url ? (
-                    <a href={item.url} class="text-neutral-400 transition hover:text-brand-400">
-                      {item.name}
-                    </a>
-                  ) : (
-                    <span class="text-neutral-300">{item.name}</span>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
-        )
-      }
-      {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
-      <h1 class="font-display text-4xl font-semibold leading-tight text-white sm:text-5xl">{title}</h1>
-      {subtitle && <p class="mt-5 text-lg leading-relaxed text-neutral-300 sm:text-xl">{subtitle}</p>}
-      <slot />
-    </div>
+  <div class="container-page relative py-16 sm:py-20">
+    {
+      breadcrumb && breadcrumb.length > 0 && (
+        <nav aria-label="Percorso" class="mb-6">
+          <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+            {breadcrumb.map((item, i) => (
+              <li class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
+                {i > 0 && (
+                  <span aria-hidden="true" class="text-neutral-600">
+                    /
+                  </span>
+                )}
+                {item.url ? (
+                  <a href={item.url} class="text-neutral-400 transition hover:text-brand-400">
+                    {item.name}
+                  </a>
+                ) : (
+                  <span class="text-neutral-300">{item.name}</span>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
+    {eyebrow && <p class="section-index">{eyebrow}</p>}
+
+    <h1 class:list={['page-title mt-4', align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-4xl']}>
+      {title}
+    </h1>
+
+    {
+      subtitle && (
+        <p
+          class:list={[
+            'mt-5 max-w-2xl text-lg leading-relaxed text-neutral-400',
+            align === 'center' && 'mx-auto text-center',
+          ]}
+        >
+          {subtitle}
+        </p>
+      )
+    }
+
+    <slot />
   </div>
 </section>

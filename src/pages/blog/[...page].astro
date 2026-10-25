@@ -43,8 +43,14 @@ const jsonLd = breadcrumb(crumbs, siteUrl);
       <TagFilter tags={tags} />
     </div>
 
-    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {page.data.map((post) => <BlogCard post={post} />)}
+    {page.data[0] && (
+ <div class="mb-6">
+ <BlogCard post={page.data[0]} large />
+ </div>
+ )}
+
+ <div class="grid gap-6 sm:grid-cols-2">
+      {page.data.slice(1).map((post) => <BlogCard post={post} />)}
     </div>
 
     <Pagination currentPage={page.currentPage} lastPage={page.lastPage} basePath="/blog" />

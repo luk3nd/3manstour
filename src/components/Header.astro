@@ -45,10 +45,10 @@ const latest = (await getCollection('blog', ({ data }) => !data.draft)).sort(
         latest && (
           <a
             href={`/blog/${latest.id}`}
-            class="mr-1 hidden items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 transition hover:border-white/25 xl:flex"
+            class="mr-1 hidden items-center gap-2 border border-white/10 px-3 py-1.5 transition hover:border-white/25 xl:flex"
             aria-label={`Dal diario: ${latest.data.title}`}
           >
-            <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" aria-hidden="true" />
+            <span class="h-1.5 w-1.5 shrink-0 bg-brand-500" aria-hidden="true" />
             <span class="font-mono text-[9px] uppercase tracking-[0.16em] text-neutral-500">
               Dal diario
             </span>
@@ -60,14 +60,14 @@ const latest = (await getCollection('blog', ({ data }) => !data.draft)).sort(
       }
       <a
         href="/contatti"
-        class="hidden items-center gap-1.5 rounded-lg bg-brand-500 px-4 py-2 text-sm font-semibold text-night-950 transition hover:bg-brand-400 sm:inline-flex"
+        class="hidden items-center gap-1.5 bg-brand-500 px-4 py-2 text-sm font-semibold text-night-950 transition hover:bg-brand-400 sm:inline-flex"
       >
         Parliamone
       </a>
       <button
         id="nav-toggle"
         type="button"
-        class="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-white md:hidden"
+        class="grid h-10 w-10 place-items-center border border-white/10 text-white md:hidden"
         aria-expanded="false"
         aria-controls="nav-mobile"
         aria-label="Apri il menu"
@@ -92,7 +92,7 @@ const latest = (await getCollection('blog', ({ data }) => !data.draft)).sort(
           </a>
         ))
       }
-      <a href="/contatti" class="mt-2 rounded-lg bg-brand-500 px-3 py-2.5 text-center text-sm font-semibold text-night-950">
+      <a href="/contatti" class="btn btn--orange mt-2 w-full">
         Parliamone
       </a>
     </nav>

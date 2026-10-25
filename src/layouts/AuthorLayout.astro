@@ -48,34 +48,39 @@ const socialItems = socialEntries.map(([key, href]) => ({
   imageAlt={name}
   jsonLd={jsonLd}
 >
-  <section class="border-b border-white/10 bg-night-900">
-    <div class="container-page flex flex-col items-center gap-6 py-16 text-center sm:flex-row sm:items-center sm:text-left">
-      <Image
-        src={avatar}
-        alt={name}
-        width={144}
-        height={144}
-        format="webp"
-        class="h-36 w-36 shrink-0 rounded-full object-cover ring-2 ring-brand-500/30"
-      />
-      <div>
-        <p class="eyebrow">Autore</p>
-        <h1 class="mt-2 text-3xl font-semibold text-white sm:text-4xl">{name}</h1>
-        <p class="mt-1 font-mono text-sm uppercase tracking-wider text-brand-400">{role}</p>
-        <p class="mt-4 max-w-2xl text-neutral-400">{bio}</p>
-        <SocialLinks items={socialItems} class="mt-5 justify-center text-neutral-500 sm:justify-start" />
+  <section class="section">
+    <div class="container-page">
+      <div class="about__grid">
+        <figure class="about__media">
+          <Image
+            src={avatar}
+            alt={name}
+            width={900}
+            height={900}
+            format="webp"
+            class="aspect-square w-full object-cover"
+          />
+        </figure>
+
+        <div class="about__copy">
+          <p class="section-index">Autore</p>
+          <h1 class="page-title mt-4">{name}</h1>
+          <p class="micro mt-2">{role}</p>
+          <p class="about__intro mt-6">{bio}</p>
+          <SocialLinks items={socialItems} class="mt-6" />
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="container-page py-14">
+  <section class="container-page py-16">
     <div class="flex items-end justify-between gap-4">
       <h2 class="text-2xl font-semibold text-white">Articoli di {name}</h2>
       <span class="font-mono text-sm text-neutral-500">{posts.length} {posts.length === 1 ? 'articolo' : 'articoli'}</span>
     </div>
     {
       posts.length > 0 ? (
-        <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="mt-8 grid gap-6 sm:grid-cols-2">
           {posts.map((post) => (
             <BlogCard post={post} />
           ))}

@@ -17,7 +17,7 @@ const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
   items.length > 0 && (
     <>
       {/* Mobile/tablet: indice collassabile */}
-      <details class="group rounded-2xl border border-white/10 bg-night-900 px-5 py-4 xl:hidden">
+      <details class="group border border-white/10 bg-night-900 px-5 py-4 xl:hidden">
         <summary class="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
           <span class="eyebrow">Indice</span>
           <svg

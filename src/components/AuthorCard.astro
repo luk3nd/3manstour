@@ -14,7 +14,7 @@ const { name, role, bio, avatar, shortBio } = author.data;
 
 <a
   href={`/autori/${author.id}`}
-  class="group flex flex-col items-center rounded-2xl border border-white/10 bg-night-900 p-8 text-center transition hover:-translate-y-1 hover:border-brand-500/50"
+  class="group flex flex-col items-center border border-white/10 bg-night-900 p-8 text-center transition hover:-translate-y-1 hover:border-brand-500/50"
 >
   <Image
     src={avatar}
@@ -22,7 +22,7 @@ const { name, role, bio, avatar, shortBio } = author.data;
     width={112}
     height={112}
     format="webp"
-    class="h-28 w-28 rounded-full object-cover ring-2 ring-brand-500/30"
+    class="h-28 w-28 object-cover ring-2 ring-brand-500/30"
   />
   <h3 class="mt-5 text-lg font-semibold text-white transition group-hover:text-brand-400">{name}</h3>
   <p class="mt-1 font-mono text-xs uppercase tracking-wider text-brand-400">{role}</p>

@@ -15,7 +15,7 @@ const socialItems = Object.entries(socials ?? {})
   .map(([key, href]) => ({ label: key.charAt(0).toUpperCase() + key.slice(1), href: href as string }));
 ---
 
-<aside class="mt-16 rounded-2xl border border-white/10 bg-night-900 p-8">
+<aside class="mt-16 border border-white/10 bg-night-900 p-8">
   <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
     <Image
       src={avatar}
@@ -23,7 +23,7 @@ const socialItems = Object.entries(socials ?? {})
       width={96}
       height={96}
       format="webp"
-      class="h-24 w-24 shrink-0 rounded-full object-cover ring-2 ring-brand-500/30"
+      class="h-24 w-24 shrink-0 object-cover ring-2 ring-brand-500/30"
     />
     <div class="flex-1">
       <p class="eyebrow">Scritto da</p>
@@ -33,7 +33,7 @@ const socialItems = Object.entries(socials ?? {})
       <div class="mt-5 flex flex-wrap items-center gap-4">
         <a
           href={`/autori/${author.id}`}
-          class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2 text-sm font-semibold text-night-950 transition hover:bg-brand-400"
+          class="inline-flex items-center gap-2 bg-brand-500 px-4 py-2 text-sm font-semibold text-night-950 transition hover:bg-brand-400"
         >
           Vedi tutti gli articoli
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
