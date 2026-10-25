@@ -58,7 +58,7 @@ const jsonLd = [
   <section class="section about">
     <div class="container">
       <div class="about__grid">
-        <figure class="about__media" data-animate>
+        <figure class="about__media">
           <Image
             src={storiaImg}
             alt="I tre di 3 Man's Tour davanti al cartello del Tremalzo"
@@ -71,18 +71,18 @@ const jsonLd = [
         </figure>
 
         <div class="about__copy">
-          <p class="about__intro" data-animate>
+          <p class="about__intro">
             Non vogliamo fare l’ennesima lista di posti da spuntare. Ci interessa capire cosa rende
             speciale un’esperienza, viverla in prima persona e condividerla con uno sguardo curioso
             e sincero.
           </p>
-          <p class="about__text" data-animate>
+          <p class="about__text">
             Per questo visitiamo fiere, ristoranti, luoghi ed esperienze e poi raccogliamo
             impressioni, dettagli e storie in articoli e video: senza fingere che ogni scoperta
             debba piacere a tutti.
           </p>
 
-          <ul class="team" data-animate aria-label="Il trio">
+          <ul class="team" aria-label="Il trio">
             {authors.map((author, i) => (
               <li>
                 <span class="team__num">{String(i + 1).padStart(2, '0')}</span>
@@ -92,7 +92,7 @@ const jsonLd = [
             ))}
           </ul>
 
-          <p class="about__place" data-animate>
+          <p class="about__place">
             <span class="dot" aria-hidden="true"></span>Brescia, Italia · dal 2023
           </p>
         </div>
@@ -101,20 +101,20 @@ const jsonLd = [
   </section>
 
   <!-- ================= STORIA E NOME ================= -->
-  <section data-reveal class="border-t border-white/10 py-20 sm:py-28">
+  <section class="border-t border-white/10 py-20 sm:py-28">
     <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
-      <div class="relative aspect-[4/3] overflow-hidden border border-white/10" data-animate>
+      <div class="relative aspect-[4/3] overflow-hidden border border-white/10">
         <Image
           src={storiaImg}
           alt="Il rifugio al Passo Crocedomini, in provincia di Brescia"
           widths={[640, 960, 1280]}
           sizes="(min-width:1024px) 50vw, 100vw"
           format="webp"
-          data-parallax="6"
+         
           class="h-full w-full object-cover"
         />
       </div>
-      <div data-animate>
+      <div>
         <p class="eyebrow">Storia e nome</p>
         <h2 class="page-title-lg mt-4 text-white">
           Da dove arriva “3 Man’s Tour”
@@ -143,7 +143,7 @@ const jsonLd = [
   <!-- ================= METODO ================= -->
   <section class="section">
     <div class="container">
-      <div class="method" data-animate>
+      <div class="method">
         <div class="method__head">
           <p class="micro">Il nostro approccio</p>
           <h3>Prima si ascolta.<br />Poi si <em>racconta.</em></h3>
@@ -168,7 +168,7 @@ const jsonLd = [
         </ol>
       </div>
 
-      <blockquote class="manifesto" data-animate>
+      <blockquote class="manifesto">
         <span class="manifesto__mark" aria-hidden="true">✳</span>
         <p>“Non cerchiamo l’insolito. Cerchiamo il <em>punto di vista.</em>”</p>
         <cite>— il nostro metodo, in una riga</cite>
@@ -184,10 +184,10 @@ const jsonLd = [
   </section>
 
   <!-- ================= DOVE SIAMO ================= -->
-  <section data-reveal class="container-page py-20 sm:py-28">
+  <section class="container-page py-20 sm:py-28">
     <div
       class="relative overflow-hidden border border-white/10 bg-gradient-to-br from-night-800 to-night-900 px-8 py-16 text-center sm:px-16"
-      data-animate
+     
     >
       <div class="absolute -right-20 -top-20 h-64 w-64 bg-brand-500/20 blur-3xl"></div>
       <p class="eyebrow relative">Dove siamo</p>
