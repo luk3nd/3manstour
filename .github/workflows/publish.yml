@@ -50,6 +50,9 @@ jobs:
         run: composer install --working-dir=public/api --no-dev --optimize-autoloader
 
       - name: Build del sito
+        env:
+          META_TOKEN: ${{ secrets.META_TOKEN }}
+          IG_USER_ID: ${{ vars.IG_USER_ID }}
         run: npm run build
 
       - name: Sicurezza - nessun file di configurazione locale nel build

@@ -12,7 +12,8 @@
     "images": "node scripts/fetch-images.mjs",
     "placeholders": "node scripts/generate-placeholders.mjs",
     "serve:php": "docker compose up --build",
-    "serve:php:down": "docker compose down"
+    "serve:php:down": "docker compose down",
+    "prebuild": "node scripts/fetch-instagram.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.3",

@@ -36,3 +36,5 @@ public/api/composer.lock
 
 # artefatti locali (screenshot, workspace)
 .openchamber/
+src/data/instagram.generated.json
+src/assets/instagram/auto/

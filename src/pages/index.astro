@@ -69,7 +69,7 @@ import ig4 from '../assets/instagram/instagram-4.jpg';
 import ig5 from '../assets/instagram/instagram-5.jpg';
 import ig6 from '../assets/instagram/instagram-6.jpg';
 
-const instagram = [
+const fallbackSocial = [
   { img: ig1, url: 'https://www.instagram.com/3m.ontour/reel/DXPZugejB-y/', alt: 'Giornata al Vinitaly 2026', caption: 'La fiera che non ti aspetti' },
   { img: ig2, url: 'https://www.instagram.com/3m.ontour/reel/DWb0CKtDEAX/', alt: 'Forma d’arte in bronzo', caption: 'Piazza, 23:40' },
   { img: ig3, url: 'https://www.instagram.com/3m.ontour/reel/DWByvdeDO8A/', alt: 'Villa con vista', caption: 'L’ultima salita' },
@@ -77,6 +77,29 @@ const instagram = [
   { img: ig5, url: 'https://www.instagram.com/3m.ontour/p/DSkU9KnDJfN/', alt: 'La casa dei vasi', caption: 'Cartolina, ma dal lato giusto' },
   { img: ig6, url: 'https://www.instagram.com/3m.ontour/p/DSNFz-ZDPXI/', alt: 'Piatto del ristorante', caption: 'Tremalzo, 16' },
 ];
+
+// Post Instagram: se la build li ha scaricati, usa quelli; altrimenti la lista statica.
+const socialData = import.meta.glob<{ items: { file: string; url: string; alt: string; caption: string }[] }>(
+  '../data/instagram.generated.json',
+  { eager: true },
+);
+const socialItems = Object.values(socialData)[0]?.items ?? [];
+const autoImages = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/instagram/auto/*.{jpg,jpeg,png,webp}',
+  { eager: true },
+);
+
+const instagram =
+  socialItems.length > 0
+    ? socialItems
+        .map((item) => ({
+          img: autoImages[`../assets/instagram/auto/${item.file}`]?.default,
+          url: item.url,
+          alt: item.alt,
+          caption: item.caption,
+        }))
+        .filter((item) => Boolean(item.img))
+    : fallbackSocial;
 
 const siteUrl = Astro.site ?? new URL(SITE.url);
 const jsonLd = [
