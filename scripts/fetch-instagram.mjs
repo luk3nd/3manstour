@@ -29,15 +29,18 @@ async function main() {
     return;
   }
 
-  let userId = (process.env.IG_USER_ID || '').trim();
-  if (!userId) {
-    const pages = await api('/me/accounts', {
-      fields: 'instagram_business_account{id,username}',
-      limit: '100',
-    });
-    userId = (pages.data || []).find((p) => p.instagram_business_account)?.instagram_business_account?.id || '';
-  }
-  if (!userId) throw new Error('nessun account Instagram Business collegato alla Pagina');
+  // L'account si riconosce dal nome, non dall'id: il token può vedere più profili.
+  const username = (process.env.IG_USERNAME || '3m.ontour').replace(/^@/, '').trim().toLowerCase();
+  const pages = await api('/me/accounts', {
+    fields: 'instagram_business_account{id,username}',
+    limit: '100',
+  });
+  const match = (pages.data || []).find(
+    (p) => (p.instagram_business_account?.username || '').toLowerCase() === username,
+  )?.instagram_business_account?.id;
+
+  let userId = match || (process.env.IG_USER_ID || '').trim();
+  if (!userId) throw new Error(`account @${username} non trovato tra le Pagine collegate`);
 
   const media = await api(`/${userId}/media`, { fields: FIELDS, limit: '12' });
   const picks = (media.data || [])
