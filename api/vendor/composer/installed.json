@@ -43,6 +43,7 @@
                 "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
             },
             "time": "2025-10-15T16:49:08+00:00",
+            "published-time": "2025-10-15T16:49:35+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
