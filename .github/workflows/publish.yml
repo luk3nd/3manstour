@@ -16,6 +16,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Ogni giorno alle 05:15 UTC (06:15 / 07:15 in Italia)
+    - cron: '15 5 * * *'
 
 concurrency:
   group: publish
